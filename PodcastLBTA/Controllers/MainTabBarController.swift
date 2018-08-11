@@ -27,15 +27,15 @@ class MainTabBarController: UITabBarController {
     
     func setupTabBarControllers() {
         viewControllers = [
+            createNavigationController(for: PodcastsSearchController(), title: "Search", image: #imageLiteral(resourceName: "search")),
             createNavigationController(for: ViewController(), title: "Favourites", image: #imageLiteral(resourceName: "favourite")),
-            createNavigationController(for: ViewController(), title: "Search", image: #imageLiteral(resourceName: "search")),
             createNavigationController(for: ViewController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
         ]
     }
     
     // MARK: - Helper Functions
     
-    fileprivate func createNavigationController(for rootViewController: ViewController, title: String, image: UIImage) -> UIViewController {
+    fileprivate func createNavigationController(for rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
         
         rootViewController.navigationItem.title = title
@@ -45,6 +45,5 @@ class MainTabBarController: UITabBarController {
         
         return navController
     }
-    
     
 } // MainTabBarController
