@@ -13,7 +13,7 @@ import Alamofire
 
 class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     
-    let cellId = "cellId"
+    fileprivate let cellId = "cellId"
     
     var podcasts = [Podcast]()
     
@@ -29,6 +29,7 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     // MARK: - Setup functions
     
     fileprivate func setupSearchController() {
+        self.definesPresentationContext = true
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.dimsBackgroundDuringPresentation = false
@@ -63,13 +64,17 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 250
+        return self.podcasts.count > 0 ? 0 : 250
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return podcasts.count
     }
 
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 116
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PodcastCell
         let podcast = podcasts[indexPath.row]
@@ -79,8 +84,12 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return CGFloat(116)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let podcast = podcasts[indexPath.row]
+        let episodesController = EpisodesController()
+        episodesController.podcast = podcast
+        
+        navigationController?.pushViewController(episodesController, animated: true)
     }
     
 } // PodcastsSearchController
