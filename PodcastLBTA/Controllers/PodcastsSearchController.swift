@@ -13,9 +13,9 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     
     let cellId = "cellId"
     
-    let podcasts = [
-        Podcast(name: "Podcast 1", author: "Author 1"),
-        Podcast(name: "Podcast 2", author: "Author 2")
+    var podcasts = [
+        Podcast(trackName: "Podcast 1", artistName: "Author 1"),
+        Podcast(trackName: "Podcast 2", artistName: "Author 2")
     ]
     
     let searchController = UISearchController(searchResultsController: nil)
@@ -45,20 +45,33 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         
-        guard searchText.count > 3 else { return }
+        let url = "https://itunes.apple.com/search"
+        let parameters = [
+            "term": searchText,
+            "media": "podcast"
+        ]
         
-        let url = "https://itunes.apple.com/search?term=\(searchText)"
-        Alamofire.request(url).responseData { (dataResponse) in
-            
+        Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
             if let err = dataResponse.error {
                 print("There was an error fetching list of podcasts", err)
                 return
             }
             
             guard let data = dataResponse.data else { return }
-            let dummyString = String(data: data, encoding: .utf8)
-            print(dummyString ?? "")
+            
+            do {
+                let searchResult = try JSONDecoder().decode(SearchResult.self, from: data)
+                self.podcasts = searchResult.results
+                self.tableView.reloadData()
+            } catch let err {
+                print("There was an error attempting to decode searchResult:", err)
+            }
         }
+    }
+    
+    struct SearchResult: Decodable {
+        let resultCount: Int
+        let results: [Podcast]
     }
     
     // MARK: - UITableViewDelegate
@@ -72,8 +85,7 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
         let podcast = podcasts[indexPath.row]
         
         cell.textLabel?.numberOfLines = 0
-        
-        cell.textLabel?.text = "\(podcast.name)\n\(podcast.author)"
+        cell.textLabel?.text = "\(podcast.trackName ?? "")\n\(podcast.artistName ?? "")"
         cell.imageView?.image = nil
 
         return cell
