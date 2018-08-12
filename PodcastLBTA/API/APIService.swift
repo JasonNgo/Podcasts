@@ -15,7 +15,7 @@ class APIService {
     static let shared = APIService()
     
     // base url
-    let baseiTunesSearchURL = "https://itunes.apple.com/search"
+    let baseiTunesSearchUrl = "https://itunes.apple.com/search"
     
     struct SearchResult: Decodable {
         var resultCount: Int?
@@ -30,7 +30,7 @@ class APIService {
             "media": "podcast"
         ]
         
-        Alamofire.request(baseiTunesSearchURL, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
+        Alamofire.request(baseiTunesSearchUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
             if let err = dataResponse.error {
                 print("There was an error fetching list of podcasts", err)
                 return

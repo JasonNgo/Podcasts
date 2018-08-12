@@ -7,5 +7,6 @@ target 'PodcastLBTA' do
 
   # Pods for PodcastLBTA
   pod 'Alamofire', '~> 4.7'
+  pod 'SDWebImage', '~> 4.0'
 
 end
