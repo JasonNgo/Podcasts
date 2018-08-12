@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		141D2AE43DD2378DD0AEA377 /* Pods_PodcastLBTA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DE8AF9304293CECD3B36D38 /* Pods_PodcastLBTA.framework */; };
+		7D2ECC3D211FBAC800E8C580 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ECC3C211FBAC800E8C580 /* APIService.swift */; };
 		7DBDE65D211F69BD0004DD72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */; };
 		7DBDE65F211F69BD0004DD72 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE65E211F69BD0004DD72 /* ViewController.swift */; };
 		7DBDE664211F69BE0004DD72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DBDE663211F69BE0004DD72 /* Assets.xcassets */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		6DE8AF9304293CECD3B36D38 /* Pods_PodcastLBTA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PodcastLBTA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D2ECC3C211FBAC800E8C580 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		7DBDE659211F69BD0004DD72 /* PodcastLBTA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PodcastLBTA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DBDE65E211F69BD0004DD72 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -53,6 +55,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		7D2ECC3B211FBAB800E8C580 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				7D2ECC3C211FBAC800E8C580 /* APIService.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		7DBDE650211F69BD0004DD72 = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +88,7 @@
 				7DBDE663211F69BE0004DD72 /* Assets.xcassets */,
 				7DBDE668211F69BE0004DD72 /* Info.plist */,
 				7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */,
+				7D2ECC3B211FBAB800E8C580 /* API */,
 				7DBDE672211F81A50004DD72 /* Models */,
 				7DBDE671211F81A00004DD72 /* Views */,
 				7DBDE670211F819B0004DD72 /* Controllers */,
@@ -233,6 +244,7 @@
 				7DBDE65F211F69BD0004DD72 /* ViewController.swift in Sources */,
 				7DBDE65D211F69BD0004DD72 /* AppDelegate.swift in Sources */,
 				7DBDE66F211F6BD20004DD72 /* MainTabBarController.swift in Sources */,
+				7D2ECC3D211FBAC800E8C580 /* APIService.swift in Sources */,
 				7DBDE676211F82010004DD72 /* Podcast.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
