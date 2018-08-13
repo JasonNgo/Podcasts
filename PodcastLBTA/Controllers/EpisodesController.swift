@@ -11,14 +11,13 @@ import FeedKit
 
 class EpisodesController: UITableViewController {
     
-    fileprivate let cellId = "cellId"
+    fileprivate let cellId = "episodeCell"
     
     var episodes = [Episode]()
     
     var podcast: Podcast? {
         didSet {
             navigationItem.title = podcast?.trackName
-            
             fetchEpisodes()
         }
     }
@@ -27,14 +26,15 @@ class EpisodesController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupTableView()
     }
     
     // MARK: Setup
     
     fileprivate func setupTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.tableFooterView = UIView()
+        let nib = UINib(nibName: "EpisodeCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellId)
     }
     
     // MARK: Helper functions
@@ -43,32 +43,13 @@ class EpisodesController: UITableViewController {
         print("attempting to fetch episodes from RSS feed url: \(podcast?.feedUrl ?? "")")
         
         guard let unwrappedFeedUrl = podcast?.feedUrl else { return }
-        let secureFeedUrl = unwrappedFeedUrl.contains("https") ? unwrappedFeedUrl ? unwrappedFeedUrl.replacingOccurrences(of: "http", with: "https")
-        
-        guard let url = URL(string: secureFeedUrl) else { return }
-        let parser = FeedParser(URL: url)
-        
-        parser.parseAsync { (result) in
+        APIService.shared.fetchEpisodesFrom(feedUrl: unwrappedFeedUrl) { (episodes) in
+            self.episodes = episodes
             
-            guard let feed = result.rssFeed, result.isSuccess else {
-                print("There was an error attempting to parse the RSS feed.", result.error)
-                return
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
-            
-            var tempEpisodes = [Episode]()
-            
-            feed.items?.forEach({ (feedItem) in
-                guard let episodeTitle = feedItem.title else { return }
-                
-                let episodeToAppend = Episode(title: episodeTitle)
-                tempEpisodes.append(episodeToAppend)
-                
-                self.episodes = tempEpisodes
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }) // forEach
-        } // parseAsync
+        }
     } // fetchEpisodes
 
     // MARK: - UITableViewDelegate
@@ -78,12 +59,15 @@ class EpisodesController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! EpisodeCell
         let episode = episodes[indexPath.row]
         
-        cell.textLabel?.text = episode.title
-        
+        cell.episode = episode
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 132
     }
     
 } // EpisodesController

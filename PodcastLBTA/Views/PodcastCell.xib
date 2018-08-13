@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="117" id="QVR-AC-QT3" customClass="PodcastCell" customModule="PodcastLBTA" customModuleProvider="target">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="podcastCell" rowHeight="117" id="QVR-AC-QT3" customClass="PodcastCell" customModule="PodcastLBTA" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="491" height="117"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QVR-AC-QT3" id="BHK-xE-ExP">
@@ -28,22 +28,22 @@
                         </constraints>
                     </imageView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="iPu-i6-oCN">
-                        <rect key="frame" x="112" y="19" width="351" height="79"/>
+                        <rect key="frame" x="112" y="25.5" width="351" height="65.5"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Track Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Km-Ff-5rt">
-                                <rect key="frame" x="0.0" y="0.0" width="351" height="27.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="351" height="23"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0nC-Wu-fup">
-                                <rect key="frame" x="0.0" y="29.5" width="351" height="25"/>
+                                <rect key="frame" x="0.0" y="25" width="351" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of Episodes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGS-P3-K2N">
-                                <rect key="frame" x="0.0" y="56.5" width="351" height="22.5"/>
+                                <rect key="frame" x="0.0" y="47.5" width="351" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -61,11 +61,10 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="iPu-i6-oCN" secondAttribute="trailing" constant="8" id="9B1-yD-IkG"/>
-                    <constraint firstItem="fyZ-lF-RRV" firstAttribute="top" secondItem="BHK-xE-ExP" secondAttribute="top" constant="8" id="VGl-f7-o5s"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="iPu-i6-oCN" secondAttribute="bottom" constant="8" id="VYv-8M-jbf"/>
                     <constraint firstItem="iPu-i6-oCN" firstAttribute="leading" secondItem="fyZ-lF-RRV" secondAttribute="trailing" constant="12" id="g7e-Vg-Aaq"/>
                     <constraint firstItem="fyZ-lF-RRV" firstAttribute="leading" secondItem="BHK-xE-ExP" secondAttribute="leading" id="ghm-F8-QJ5"/>
-                    <constraint firstItem="iPu-i6-oCN" firstAttribute="top" secondItem="BHK-xE-ExP" secondAttribute="topMargin" constant="8" id="mOC-lT-8Fv"/>
+                    <constraint firstItem="iPu-i6-oCN" firstAttribute="centerY" secondItem="BHK-xE-ExP" secondAttribute="centerY" id="kEu-p0-ZwE"/>
+                    <constraint firstItem="fyZ-lF-RRV" firstAttribute="centerY" secondItem="BHK-xE-ExP" secondAttribute="centerY" id="lEh-Mm-pci"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

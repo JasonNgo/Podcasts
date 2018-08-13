@@ -13,7 +13,7 @@ import Alamofire
 
 class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     
-    fileprivate let cellId = "cellId"
+    fileprivate let cellId = "podcastCell"
     
     var podcasts = [Podcast]()
     
