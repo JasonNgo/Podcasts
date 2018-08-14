@@ -90,33 +90,36 @@
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="122.66666666666667"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
-                                <button opaque="NO" contentMode="scaleAspectFit" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-us-xQb">
+                                <button opaque="NO" contentMode="scaleAspectFit" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-us-xQb">
                                     <rect key="frame" x="55.666666666666671" y="0.0" width="44" height="122.66666666666667"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="44" id="7Bf-jq-dm1"/>
                                     </constraints>
+                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" image="rewind"/>
                                 </button>
                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d4L-kp-Z8E">
                                     <rect key="frame" x="105.33333333333334" y="0.0" width="50" height="122.66666666666667"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
-                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e5W-1W-Err">
+                                <button opaque="NO" contentMode="scaleAspectFit" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e5W-1W-Err">
                                     <rect key="frame" x="156" y="0.0" width="54" height="122.66666666666667"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="54" id="pdG-G5-P2K"/>
                                     </constraints>
+                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" image="play"/>
                                 </button>
                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lbx-lS-Rt7">
                                     <rect key="frame" x="210.66666666666666" y="0.0" width="49.999999999999972" height="122.66666666666667"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
-                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ygf-9U-wt7">
+                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ygf-9U-wt7">
                                     <rect key="frame" x="266.33333333333331" y="0.0" width="44" height="122.66666666666667"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="44" id="j18-vB-mHt"/>
                                     </constraints>
+                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" image="forward"/>
                                 </button>
                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zYo-e5-9nv">
@@ -161,6 +164,7 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="authorLabel" destination="Yfg-6I-8Mr" id="hvt-wq-x0P"/>
+                <outlet property="playPauseButton" destination="e5W-1W-Err" id="NWl-V6-WM0"/>
                 <outlet property="playerImageView" destination="QWt-Kb-iw4" id="hyy-W4-B1I"/>
                 <outlet property="titleLabel" destination="4Rc-PE-pFQ" id="VJt-sb-qYV"/>
             </connections>
