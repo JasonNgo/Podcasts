@@ -60,7 +60,7 @@ class APIService {
             
             parser.parseAsync { (result) in
                 guard let feed = result.rssFeed, result.isSuccess else {
-                    print("There was an error attempting to parse the RSS feed.", result.error)
+                    print("There was an error attempting to parse the RSS feed: \(result.error?.description ?? "")")
                     return
                 }
                 
