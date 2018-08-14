@@ -17,7 +17,7 @@ class PlayerDetailView: UIView {
             authorLabel.text = episode.author
             
             guard let url = URL(string: episode.imageUrl?.toSecureHTTPS() ?? "") else { return }
-            playerImageView.sd_setImage(with: url, completed: nil)
+            episodeImageView.sd_setImage(with: url, completed: nil)
             
             playEpisode()
         }
@@ -29,11 +29,35 @@ class PlayerDetailView: UIView {
         return avPlayer
     }()
     
+    fileprivate let shrinkTransformation = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    
+    // MARK: - Lifecycle functions
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        let time = CMTimeMake(1, 3)
+        let times = [NSValue(time: time)]
+        
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
+            print("Started playing")
+            self.enlargeImageView()
+        }
+    }
+    
     // MARK: IBOutlets
     
-    @IBOutlet var playerImageView: UIImageView!
+    @IBOutlet var episodeImageView: UIImageView! {
+        didSet {
+            episodeImageView.layer.cornerRadius = 5
+            episodeImageView.clipsToBounds = true
+            episodeImageView.transform = shrinkTransformation
+        }
+    }
+    
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var authorLabel: UILabel!
+    
     @IBOutlet var playPauseButton: UIButton! {
         didSet {
             playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
@@ -52,16 +76,14 @@ class PlayerDetailView: UIView {
         } else {
             player.pause()
             playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
-        }
-        
-        reloadInputViews()
-    }
+        } // if
+    } // handlePlayPausedPressed
     
     // MARK: - IBActions
     
     @IBAction func handleDismissPressed(_ sender: UIButton) {
         self.removeFromSuperview()
-    }
+    } // handleDismissPressed
     
     // MARK: Helper functions
     
@@ -72,6 +94,18 @@ class PlayerDetailView: UIView {
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
         player.play()
+    } // playEpisode
+    
+    fileprivate func enlargeImageView() {
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.episodeImageView.transform = .identity
+        })
+    }
+    
+    fileprivate func shrinkImageVIew() {
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.episodeImageView.transform = self.shrinkTransformation
+        })
     }
     
 } // PlayerDetailView

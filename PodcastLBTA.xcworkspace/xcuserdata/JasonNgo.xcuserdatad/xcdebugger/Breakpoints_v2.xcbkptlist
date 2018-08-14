@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PodcastLBTA/Views/PlayerDetailView.swift"
-            timestampString = "555897778.661451"
+            timestampString = "555904568.655913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "47"
             endingLineNumber = "47"
-            landmarkName = "handlePlayPausePressed()"
-            landmarkType = "7">
+            landmarkName = "PlayerDetailView"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PodcastLBTA/Views/PlayerDetailView.swift"
-            timestampString = "555897778.661925"
+            timestampString = "555904568.65599"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "22"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PodcastLBTA/Views/PlayerDetailView.swift"
-            timestampString = "555897778.662171"
+            timestampString = "555904568.656046"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "16"
