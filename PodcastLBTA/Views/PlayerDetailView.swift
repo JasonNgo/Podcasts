@@ -31,21 +31,7 @@ class PlayerDetailView: UIView {
     
     fileprivate let shrinkTransformation = CGAffineTransform(scaleX: 0.7, y: 0.7)
     
-    // MARK: - Lifecycle functions
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        let time = CMTimeMake(1, 3)
-        let times = [NSValue(time: time)]
-        
-        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
-            print("Started playing")
-            self.enlargeImageView()
-        }
-    }
-    
-    // MARK: IBOutlets
+    // MARK: IB Outlets and Actions
     
     @IBOutlet var episodeImageView: UIImageView! {
         didSet {
@@ -65,6 +51,30 @@ class PlayerDetailView: UIView {
         }
     }
     
+    @IBOutlet var currentTimeLabel: UILabel!
+    @IBOutlet var durationTimeLabel: UILabel!
+    @IBOutlet var currentTimeSlider: UISlider!
+    
+    @IBAction func handleDismissPressed(_ sender: UIButton) {
+        self.removeFromSuperview()
+    } // handleDismissPressed
+    
+    // MARK: - Lifecycle functions
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        observePlayerTime()
+        
+        let time = CMTimeMake(1, 3)
+        let times = [NSValue(time: time)]
+        
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
+            print("Started playing")
+            self.enlargeImageView()
+        }
+    }
+    
     // MARK: - Selector Functions
     
     @objc func handlePlayPausePressed() {
@@ -73,17 +83,13 @@ class PlayerDetailView: UIView {
         if player.timeControlStatus == .paused {
             player.play()
             playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            enlargeImageView()
         } else {
             player.pause()
             playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            shrinkImageVIew()
         } // if
     } // handlePlayPausedPressed
-    
-    // MARK: - IBActions
-    
-    @IBAction func handleDismissPressed(_ sender: UIButton) {
-        self.removeFromSuperview()
-    } // handleDismissPressed
     
     // MARK: Helper functions
     
@@ -108,4 +114,23 @@ class PlayerDetailView: UIView {
         })
     }
     
+    fileprivate func observePlayerTime() {
+        let interval = CMTimeMake(1, 2)
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
+            let displayString = time.toDisplayString()
+            self.currentTimeLabel.text = displayString
+            self.durationTimeLabel.text = self.player.currentItem?.duration.toDisplayString()
+            
+            self.updateCurrentTimeSlider()
+        }
+    }
+    
+    fileprivate func updateCurrentTimeSlider() {
+        let currentTimeSeconds = CMTimeGetSeconds(player.currentTime())
+        let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(1, 1))
+        
+        let percentage = currentTimeSeconds / durationSeconds
+        currentTimeSlider.value = Float(percentage)
+    }
+
 } // PlayerDetailView
