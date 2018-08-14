@@ -11,6 +11,14 @@ import AVKit
 
 class PlayerDetailView: UIView {
     
+    let player: AVPlayer = {
+        let avPlayer = AVPlayer()
+        avPlayer.automaticallyWaitsToMinimizeStalling = false
+        return avPlayer
+    }()
+    
+    fileprivate let shrinkTransformation = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    
     var episode: Episode! {
         didSet {
             titleLabel.text = episode.title
@@ -23,15 +31,13 @@ class PlayerDetailView: UIView {
         }
     }
     
-    let player: AVPlayer = {
-        let avPlayer = AVPlayer()
-        avPlayer.automaticallyWaitsToMinimizeStalling = false
-        return avPlayer
-    }()
+    // MARK: IBOutlets
     
-    fileprivate let shrinkTransformation = CGAffineTransform(scaleX: 0.7, y: 0.7)
-    
-    // MARK: IB Outlets and Actions
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var authorLabel: UILabel!
+    @IBOutlet var currentTimeLabel: UILabel!
+    @IBOutlet var durationTimeLabel: UILabel!
+    @IBOutlet var currentTimeSlider: UISlider!
     
     @IBOutlet var episodeImageView: UIImageView! {
         didSet {
@@ -41,9 +47,6 @@ class PlayerDetailView: UIView {
         }
     }
     
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var authorLabel: UILabel!
-    
     @IBOutlet var playPauseButton: UIButton! {
         didSet {
             playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
@@ -51,9 +54,44 @@ class PlayerDetailView: UIView {
         }
     }
     
-    @IBOutlet var currentTimeLabel: UILabel!
-    @IBOutlet var durationTimeLabel: UILabel!
-    @IBOutlet var currentTimeSlider: UISlider!
+    @objc func handlePlayPausePressed() {
+        print("play/pause button pressed")
+        
+        if player.timeControlStatus == .paused {
+            player.play()
+            playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            enlargeImageView()
+        } else {
+            player.pause()
+            playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            shrinkImageVIew()
+        } // if
+    } // handlePlayPausedPressed
+    
+    // MARK: - IBActions
+    
+    @IBAction func handleCurrentTimeValueChanged(_ sender: UISlider) {
+        guard let duration = player.currentItem?.duration else { return }
+        
+        let percentage = currentTimeSlider.value
+        let durationSeconds = CMTimeGetSeconds(duration)
+        let seekTimeInSeconds = durationSeconds * Float64(percentage)
+        let seekTime = CMTime(seconds: seekTimeInSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        
+        player.seek(to: seekTime)
+    }
+    
+    @IBAction func handleRewindPressed(_ sender: UIButton) {
+        seekToCurrentTimeWith(delta: -10)
+    }
+    
+    @IBAction func handleFastForwardPressed(_ sender: UIButton) {
+        seekToCurrentTimeWith(delta: 10)
+    }
+    
+    @IBAction func handleVolumeValueChanged(_ sender: UISlider) {
+        player.volume = sender.value
+    }
     
     @IBAction func handleDismissPressed(_ sender: UIButton) {
         self.removeFromSuperview()
@@ -74,22 +112,6 @@ class PlayerDetailView: UIView {
             self.enlargeImageView()
         }
     }
-    
-    // MARK: - Selector Functions
-    
-    @objc func handlePlayPausePressed() {
-        print("play/pause button pressed")
-        
-        if player.timeControlStatus == .paused {
-            player.play()
-            playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
-            enlargeImageView()
-        } else {
-            player.pause()
-            playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
-            shrinkImageVIew()
-        } // if
-    } // handlePlayPausedPressed
     
     // MARK: Helper functions
     
@@ -131,6 +153,14 @@ class PlayerDetailView: UIView {
         
         let percentage = currentTimeSeconds / durationSeconds
         currentTimeSlider.value = Float(percentage)
+    }
+    
+    fileprivate func seekToCurrentTimeWith(delta: Int64) {
+        let currentTime = player.currentTime()
+        let deltaTime = CMTimeMake(delta, 1)
+        
+        let seekTime = CMTimeAdd(currentTime, deltaTime)
+        player.seek(to: seekTime)
     }
 
 } // PlayerDetailView
