@@ -72,15 +72,30 @@ class EpisodesController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = episodes[indexPath.row]
-        print(episode.title)
         
-        let window = UIApplication.shared.keyWindow
-        let playerDetailView = Bundle.main.loadNibNamed("PlayerDetailView", owner: self, options: nil)?.first as! PlayerDetailView
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+        tabBarController?.maximizePlayerDetails(episode: episode)
         
-        playerDetailView.episode = episode
-        playerDetailView.frame = self.view.frame
         
-        window?.addSubview(playerDetailView)
+//        let window = UIApplication.shared.keyWindow
+//        let playerDetailView = PlayerDetailView.initFromNib()
+//
+//        playerDetailView.episode = episode
+//        playerDetailView.frame = self.view.frame
+//
+//        window?.addSubview(playerDetailView)
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityIndicatorView.color = .darkGray
+        activityIndicatorView.startAnimating()
+        
+        return activityIndicatorView
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return episodes.isEmpty ? 400 : 0
     }
     
 } // EpisodesController

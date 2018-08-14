@@ -54,17 +54,20 @@ class APIService {
         print("searching for episodes...")
         
         guard let url = URL(string: feedUrl.toSecureHTTPS()) else { return }
-        let parser = FeedParser(URL: url)
         
-        parser.parseAsync { (result) in
-            guard let feed = result.rssFeed, result.isSuccess else {
-                print("There was an error attempting to parse the RSS feed.", result.error)
-                return
-            }
+        DispatchQueue.global(qos: .background).async {
+            let parser = FeedParser(URL: url)
             
-            let episodes = feed.toEpisodes()
-            completionHandler(episodes)
-        } // parseAsync
+            parser.parseAsync { (result) in
+                guard let feed = result.rssFeed, result.isSuccess else {
+                    print("There was an error attempting to parse the RSS feed.", result.error)
+                    return
+                }
+                
+                let episodes = feed.toEpisodes()
+                completionHandler(episodes)
+            } // parseAsync
+        }
         
     } // fetchEpisodesFrom(feedUrl:completionHandler:)
     

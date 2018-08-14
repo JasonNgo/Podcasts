@@ -94,23 +94,35 @@ class PlayerDetailView: UIView {
     }
     
     @IBAction func handleDismissPressed(_ sender: UIButton) {
-        self.removeFromSuperview()
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+        tabBarController?.minimizePlayerDetails()
     } // handleDismissPressed
     
     // MARK: - Lifecycle functions
     
+    static func initFromNib() -> PlayerDetailView {
+        return Bundle.main.loadNibNamed("PlayerDetailView", owner: self, options: nil)?.first as! PlayerDetailView
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        observePlayerTime()
-        
+    
         let time = CMTimeMake(1, 3)
         let times = [NSValue(time: time)]
         
-        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
             print("Started playing")
-            self.enlargeImageView()
+            self?.enlargeImageView()
         }
+        
+        observePlayerTime()
+        
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleExpand)))
+    }
+    
+    @objc func handleExpand() {
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+        tabBarController?.maximizePlayerDetails(episode: nil)
     }
     
     // MARK: Helper functions
@@ -138,12 +150,12 @@ class PlayerDetailView: UIView {
     
     fileprivate func observePlayerTime() {
         let interval = CMTimeMake(1, 2)
-        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
             let displayString = time.toDisplayString()
-            self.currentTimeLabel.text = displayString
-            self.durationTimeLabel.text = self.player.currentItem?.duration.toDisplayString()
+            self?.currentTimeLabel.text = displayString
+            self?.durationTimeLabel.text = self?.player.currentItem?.duration.toDisplayString()
             
-            self.updateCurrentTimeSlider()
+            self?.updateCurrentTimeSlider()
         }
     }
     
