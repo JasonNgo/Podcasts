@@ -8,6 +8,7 @@
 
 import UIKit
 import AVKit
+import MediaPlayer
 
 class PlayerDetailView: UIView {
     
@@ -138,6 +139,8 @@ class PlayerDetailView: UIView {
         super.awakeFromNib()
         
         setupGestures()
+        setupRemoteControlPlayer()
+        setupAVAudioSession()
         setupPlayerTimeObserver()
     }
     
@@ -168,6 +171,47 @@ class PlayerDetailView: UIView {
             self?.durationTimeLabel.text = self?.player.currentItem?.duration.toDisplayString()
             
             self?.updateCurrentTimeSlider()
+        }
+    }
+    
+    fileprivate func setupAVAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let error {
+            print("There was an error activating the av audio session:", error)
+        }
+    }
+    
+    fileprivate func setupRemoteControlPlayer() {
+        // start remote control observer
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
+        let commandCenter = MPRemoteCommandCenter.shared()
+        
+        // play button
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            self.player.play()
+            return .success
+        }
+        
+        // pause button
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            self.player.pause()
+            return .success
+        }
+        
+        // headphone play/pause
+        commandCenter.togglePlayPauseCommand.isEnabled = true
+        commandCenter.togglePlayPauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.handlePlayPausePressed()
+            return .success
         }
     }
     
