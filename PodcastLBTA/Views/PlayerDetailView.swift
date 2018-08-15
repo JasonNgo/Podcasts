@@ -20,6 +20,7 @@ class PlayerDetailView: UIView {
     fileprivate let shrinkTransformation = CGAffineTransform(scaleX: 0.7, y: 0.7)
     
     var panGesture: UIPanGestureRecognizer!
+    var maximizedPlayerViewPanGesture: UIPanGestureRecognizer!
     
     var episode: Episode! {
         didSet {
@@ -144,9 +145,11 @@ class PlayerDetailView: UIView {
     
     fileprivate func setupGestures() {
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        maximizedPlayerViewPanGesture = UIPanGestureRecognizer(target: self, action: #selector(handleMaximizedPan))
         
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleExpand)))
         minimizedPlayerView.addGestureRecognizer(panGesture)
+        maximizedStackView.addGestureRecognizer(maximizedPlayerViewPanGesture)
     }
     
     fileprivate func setupPlayerTimeObserver() {
@@ -214,8 +217,7 @@ class PlayerDetailView: UIView {
     // MARK: Selector Functions
     
     @objc func handleDismiss() {
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-        tabBarController?.minimizePlayerDetails()
+        UIApplication.mainTabBarController()?.minimizePlayerDetails()
     } // handleDismissPressed
     
 

@@ -11,8 +11,7 @@ import UIKit
 extension PlayerDetailView {
     
     @objc func handleExpand() {
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-        tabBarController?.maximizePlayerDetails(episode: nil)
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
     }
     
     @objc func handlePan(gesture: UIPanGestureRecognizer) {
@@ -42,8 +41,7 @@ extension PlayerDetailView {
             let velocity = gesture.velocity(in: self.superview)
             
             if translation.y < -200 || velocity.y < -500 {
-                let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-                tabBarController?.maximizePlayerDetails(episode: nil)
+                UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
             } else {
                 self.minimizedPlayerView.alpha = 1
                 self.maximizedStackView.alpha = 0
@@ -51,4 +49,33 @@ extension PlayerDetailView {
         })
     }
     
-}
+    @objc func handleMaximizedPan(gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+        case .changed:
+            handleMaximizedPanGestureChanged(gesture: gesture)
+        case .ended:
+            handleMaximizedPanGestureEnded(gesture: gesture)
+        default:
+            break
+        }
+    } // handleMaximizedPan(gesture:)
+    
+    func handleMaximizedPanGestureChanged(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: self.superview)
+        self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+    }
+    
+    func handleMaximizedPanGestureEnded(gesture: UIPanGestureRecognizer) {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.transform = .identity
+            
+            let translation = gesture.translation(in: self.superview)
+            let velocity = gesture.velocity(in: self.superview)
+            
+            if translation.y > 50 || velocity.y > 500 {
+                UIApplication.mainTabBarController()?.minimizePlayerDetails()
+            }
+        })
+    }
+    
+} // PlayerDetailView+Gesture
