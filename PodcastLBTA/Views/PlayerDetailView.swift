@@ -38,16 +38,14 @@ class PlayerDetailView: UIView {
             // miniPlayerImageView.sd_setImage(with: url, completed: nil)
             
             miniPlayerImageView.sd_setImage(with: url) { (image, _, _, _) in
-                guard let image = image else { return }
                 
-                var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
-            
-                let artwork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { (_) -> UIImage in
+                let image = self.episodeImageView.image ?? UIImage()
+                
+                let artwork = MPMediaItemArtwork(boundsSize: .zero, requestHandler: { (_) -> UIImage in
                     return image
                 })
                 
-                nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+                MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
             }
             
             playEpisode()
@@ -128,6 +126,7 @@ class PlayerDetailView: UIView {
         let durationSeconds = CMTimeGetSeconds(duration)
         let seekTimeInSeconds = durationSeconds * Float64(percentage)
         let seekTime = CMTime(seconds: seekTimeInSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = seekTimeInSeconds
         
         player.seek(to: seekTime)
     }
@@ -156,7 +155,8 @@ class PlayerDetailView: UIView {
         setupGestures()
         setupRemoteControlPlayer()
         setupAVAudioSession()
-        setupPlayerTimeObserver()
+        setupPlayerBoundaryTimeObserver()
+        setupPlayerPeriodicTimeObserver()
     }
     
     // MARK: - Setup Functions
@@ -170,15 +170,18 @@ class PlayerDetailView: UIView {
         maximizedStackView.addGestureRecognizer(maximizedPlayerViewPanGesture)
     }
     
-    fileprivate func setupPlayerTimeObserver() {
+    fileprivate func setupPlayerBoundaryTimeObserver() {
         let time = CMTimeMake(1, 3)
         let times = [NSValue(time: time)]
         
         player.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
             print("Started playing")
             self?.enlargeImageView()
+            self?.updateLockScreenDurationTime()
         }
-        
+    }
+    
+    fileprivate func setupPlayerPeriodicTimeObserver() {
         let interval = CMTimeMake(1, 2)
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
             let displayString = time.toDisplayString()
@@ -186,7 +189,6 @@ class PlayerDetailView: UIView {
             self?.durationTimeLabel.text = self?.player.currentItem?.duration.toDisplayString()
             
             self?.updateCurrentTimeSlider()
-            self?.updateLockScreenTimeTracking()
         }
     }
     
@@ -210,8 +212,9 @@ class PlayerDetailView: UIView {
         commandCenter.playCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
             self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            self.updateLockScreenElapsedTime()
             self.player.play()
-            self.enlargeImageView()
+
             return .success
         }
         
@@ -221,7 +224,8 @@ class PlayerDetailView: UIView {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             self.player.pause()
-            self.shrinkImageVIew()
+            self.updateLockScreenElapsedTime()
+            
             return .success
         }
         
@@ -242,20 +246,16 @@ class PlayerDetailView: UIView {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
-    fileprivate func updateLockScreenTimeTracking() {
-        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
-        
-        // elapsed
-        let elapsedTime = player.currentTime()
-        let elapsedSeconds = CMTimeGetSeconds(elapsedTime)
-        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedSeconds
-        
-        // duration
+    fileprivate func updateLockScreenDurationTime() {
         guard let currentItemDuration = player.currentItem?.duration else { return }
         let durationSeconds = CMTimeGetSeconds(currentItemDuration)
-        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationSeconds
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationSeconds
+    }
+    
+    fileprivate func updateLockScreenElapsedTime() {
+        let elapsedTime = player.currentTime()
+        let elapsedSeconds = CMTimeGetSeconds(elapsedTime)
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedSeconds
     }
     
     // MARK: - Helper Functions
