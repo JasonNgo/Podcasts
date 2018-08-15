@@ -28,12 +28,27 @@ class PlayerDetailView: UIView {
             titleLabel.text = episode.title
             authorLabel.text = episode.author
             
+            setupNowPlaying()
+            
             guard let url = URL(string: episode.imageUrl?.toSecureHTTPS() ?? "") else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
             
             // mini player
             miniPlayerTitleLabel.text = episode.title
-            miniPlayerImageView.sd_setImage(with: url, completed: nil)
+            // miniPlayerImageView.sd_setImage(with: url, completed: nil)
+            
+            miniPlayerImageView.sd_setImage(with: url) { (image, _, _, _) in
+                guard let image = image else { return }
+                
+                var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+            
+                let artwork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { (_) -> UIImage in
+                    return image
+                })
+                
+                nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            }
             
             playEpisode()
         }
@@ -171,6 +186,7 @@ class PlayerDetailView: UIView {
             self?.durationTimeLabel.text = self?.player.currentItem?.duration.toDisplayString()
             
             self?.updateCurrentTimeSlider()
+            self?.updateLockScreenTimeTracking()
         }
     }
     
@@ -195,6 +211,7 @@ class PlayerDetailView: UIView {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             self.player.play()
+            self.enlargeImageView()
             return .success
         }
         
@@ -204,6 +221,7 @@ class PlayerDetailView: UIView {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             self.player.pause()
+            self.shrinkImageVIew()
             return .success
         }
         
@@ -213,6 +231,31 @@ class PlayerDetailView: UIView {
             self.handlePlayPausePressed()
             return .success
         }
+    }
+    
+    fileprivate func setupNowPlaying() {
+        var nowPlayingInfo = [String: Any]()
+        
+        nowPlayingInfo[MPMediaItemPropertyTitle] = episode.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = episode.author
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    
+    fileprivate func updateLockScreenTimeTracking() {
+        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+        
+        // elapsed
+        let elapsedTime = player.currentTime()
+        let elapsedSeconds = CMTimeGetSeconds(elapsedTime)
+        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedSeconds
+        
+        // duration
+        guard let currentItemDuration = player.currentItem?.duration else { return }
+        let durationSeconds = CMTimeGetSeconds(currentItemDuration)
+        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationSeconds
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
     // MARK: - Helper Functions
