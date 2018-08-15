@@ -19,6 +19,8 @@ class PlayerDetailView: UIView {
     
     fileprivate let shrinkTransformation = CGAffineTransform(scaleX: 0.7, y: 0.7)
     
+    var panGesture: UIPanGestureRecognizer!
+    
     var episode: Episode! {
         didSet {
             titleLabel.text = episode.title
@@ -27,11 +29,34 @@ class PlayerDetailView: UIView {
             guard let url = URL(string: episode.imageUrl?.toSecureHTTPS() ?? "") else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
             
+            // mini player
+            miniPlayerTitleLabel.text = episode.title
+            miniPlayerImageView.sd_setImage(with: url, completed: nil)
+            
             playEpisode()
         }
     }
     
     // MARK: IBOutlets
+    
+    // Mini player
+    @IBOutlet var minimizedPlayerView: UIView!
+    @IBOutlet var maximizedStackView: UIStackView!
+    
+    @IBOutlet var miniPlayerImageView: UIImageView!
+    @IBOutlet var miniPlayerTitleLabel: UILabel!
+    
+    @IBOutlet var miniPlayerRewindButton: UIButton! {
+        didSet {
+            miniPlayerRewindButton.addTarget(self, action: #selector(handleRewindPressed(_:)), for: .touchUpInside)
+        }
+    }
+    
+    @IBOutlet var miniPlayerPlayPauseButton: UIButton! {
+        didSet {
+            miniPlayerPlayPauseButton.addTarget(self, action: #selector(handlePlayPausePressed), for: .touchUpInside)
+        }
+    }
     
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var authorLabel: UILabel!
@@ -47,9 +72,16 @@ class PlayerDetailView: UIView {
         }
     }
     
+    @IBOutlet var dismissButton: UIButton! {
+        didSet {
+            dismissButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+        }
+    }
+    
     @IBOutlet var playPauseButton: UIButton! {
         didSet {
             playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             playPauseButton.addTarget(self, action: #selector(handlePlayPausePressed), for: .touchUpInside)
         }
     }
@@ -60,15 +92,17 @@ class PlayerDetailView: UIView {
         if player.timeControlStatus == .paused {
             player.play()
             playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             enlargeImageView()
         } else {
             player.pause()
             playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             shrinkImageVIew()
         } // if
     } // handlePlayPausedPressed
     
-    // MARK: - IBActions
+    // MARK: - IB Actions
     
     @IBAction func handleCurrentTimeValueChanged(_ sender: UISlider) {
         guard let duration = player.currentItem?.duration else { return }
@@ -93,12 +127,7 @@ class PlayerDetailView: UIView {
         player.volume = sender.value
     }
     
-    @IBAction func handleDismissPressed(_ sender: UIButton) {
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-        tabBarController?.minimizePlayerDetails()
-    } // handleDismissPressed
-    
-    // MARK: - Lifecycle functions
+    // MARK: - Lifecycle Functions
     
     static func initFromNib() -> PlayerDetailView {
         return Bundle.main.loadNibNamed("PlayerDetailView", owner: self, options: nil)?.first as! PlayerDetailView
@@ -106,7 +135,21 @@ class PlayerDetailView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        setupGestures()
+        setupPlayerTimeObserver()
+    }
     
+    // MARK: - Setup Functions
+    
+    fileprivate func setupGestures() {
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleExpand)))
+        minimizedPlayerView.addGestureRecognizer(panGesture)
+    }
+    
+    fileprivate func setupPlayerTimeObserver() {
         let time = CMTimeMake(1, 3)
         let times = [NSValue(time: time)]
         
@@ -115,17 +158,17 @@ class PlayerDetailView: UIView {
             self?.enlargeImageView()
         }
         
-        observePlayerTime()
-        
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleExpand)))
+        let interval = CMTimeMake(1, 2)
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
+            let displayString = time.toDisplayString()
+            self?.currentTimeLabel.text = displayString
+            self?.durationTimeLabel.text = self?.player.currentItem?.duration.toDisplayString()
+            
+            self?.updateCurrentTimeSlider()
+        }
     }
     
-    @objc func handleExpand() {
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-        tabBarController?.maximizePlayerDetails(episode: nil)
-    }
-    
-    // MARK: Helper functions
+    // MARK: - Helper Functions
     
     fileprivate func playEpisode() {
         print("Playing episode")
@@ -135,6 +178,8 @@ class PlayerDetailView: UIView {
         player.replaceCurrentItem(with: playerItem)
         player.play()
     } // playEpisode
+    
+    // MARK: ImageView Helper Functions
     
     fileprivate func enlargeImageView() {
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
@@ -148,16 +193,7 @@ class PlayerDetailView: UIView {
         })
     }
     
-    fileprivate func observePlayerTime() {
-        let interval = CMTimeMake(1, 2)
-        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
-            let displayString = time.toDisplayString()
-            self?.currentTimeLabel.text = displayString
-            self?.durationTimeLabel.text = self?.player.currentItem?.duration.toDisplayString()
-            
-            self?.updateCurrentTimeSlider()
-        }
-    }
+    // MARK: AV Player Helper Functions
     
     fileprivate func updateCurrentTimeSlider() {
         let currentTimeSeconds = CMTimeGetSeconds(player.currentTime())
@@ -174,5 +210,13 @@ class PlayerDetailView: UIView {
         let seekTime = CMTimeAdd(currentTime, deltaTime)
         player.seek(to: seekTime)
     }
+    
+    // MARK: Selector Functions
+    
+    @objc func handleDismiss() {
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+        tabBarController?.minimizePlayerDetails()
+    } // handleDismissPressed
+    
 
 } // PlayerDetailView

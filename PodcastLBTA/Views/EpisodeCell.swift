@@ -32,6 +32,7 @@ class EpisodeCell: UITableViewCell {
             guard let url = URL(string: unwrappedImageUrl.toSecureHTTPS()) else { return }
             
             episodeImageView.sd_setImage(with: url, completed: nil)
+            
         }
     }
     

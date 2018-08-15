@@ -47,7 +47,6 @@ class APIService {
                 print("There was an error attempting to decode searchResult:", err)
             }
         } // request
-        
     } // fetchPodcastsWith(searchText:completionHandler:)
     
     func fetchEpisodesFrom(feedUrl: String, completionHandler: @escaping ([Episode]) -> Void) {
@@ -68,7 +67,6 @@ class APIService {
                 completionHandler(episodes)
             } // parseAsync
         }
-        
     } // fetchEpisodesFrom(feedUrl:completionHandler:)
     
 }

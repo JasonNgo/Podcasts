@@ -12,6 +12,7 @@ class MainTabBarController: UITabBarController {
     
     var maximizedTopAnchorConstraint: NSLayoutConstraint!
     var minimizedTopAnchorConstraint: NSLayoutConstraint!
+    var bottomAnchorConstraint: NSLayoutConstraint!
     
     let playerDetailView = PlayerDetailView.initFromNib()
     
@@ -25,27 +26,38 @@ class MainTabBarController: UITabBarController {
     }
     
     func maximizePlayerDetails(episode: Episode?) {
-        maximizedTopAnchorConstraint.constant = 0
-        maximizedTopAnchorConstraint.isActive = true
         minimizedTopAnchorConstraint.isActive = false
+        maximizedTopAnchorConstraint.isActive = true
+        
+        maximizedTopAnchorConstraint.constant = 0
+        bottomAnchorConstraint.constant = 0
         
         if episode != nil {
             playerDetailView.episode = episode
         }
         
+        self.playerDetailView.backgroundColor = .white
+        
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
             self.view.layoutIfNeeded()
+            
+            self.playerDetailView.maximizedStackView.alpha = 1
+            self.playerDetailView.minimizedPlayerView.alpha = 0
         })
     }
     
     func minimizePlayerDetails() {
         maximizedTopAnchorConstraint.isActive = false
+        bottomAnchorConstraint.constant = view.frame.height
         minimizedTopAnchorConstraint.isActive = true
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.tabBar.transform = .identity
             self.view.layoutIfNeeded()
+            
+            self.playerDetailView.maximizedStackView.alpha = 0
+            self.playerDetailView.minimizedPlayerView.alpha = 1
         })
     }
     
@@ -74,7 +86,9 @@ class MainTabBarController: UITabBarController {
         
         playerDetailView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         playerDetailView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        playerDetailView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        bottomAnchorConstraint = playerDetailView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: view.frame.height)
+        bottomAnchorConstraint.isActive = true
         
         maximizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
         maximizedTopAnchorConstraint.isActive = true
