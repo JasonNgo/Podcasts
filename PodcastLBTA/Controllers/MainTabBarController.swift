@@ -25,7 +25,7 @@ class MainTabBarController: UITabBarController {
         setupPlayerDetailView()
     }
     
-    func maximizePlayerDetails(episode: Episode?) {
+    func maximizePlayerDetails(episode: Episode?, playlistEpisodes: [Episode] = []) {
         minimizedTopAnchorConstraint.isActive = false
         maximizedTopAnchorConstraint.isActive = true
         
@@ -36,7 +36,7 @@ class MainTabBarController: UITabBarController {
             playerDetailView.episode = episode
         }
         
-        self.playerDetailView.backgroundColor = .white
+        playerDetailView.playlistEpisodes = playlistEpisodes
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)

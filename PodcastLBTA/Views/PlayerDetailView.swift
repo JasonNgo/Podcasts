@@ -48,9 +48,12 @@ class PlayerDetailView: UIView {
                 MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
             }
             
+            setupAVAudioSession()
             playEpisode()
         }
     }
+    
+    var playlistEpisodes = [Episode]()
     
     // MARK: IBOutlets
     
@@ -108,11 +111,13 @@ class PlayerDetailView: UIView {
             player.play()
             playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            self.updateLockScreenElapsedTime(playbackRate: 1)
             enlargeImageView()
         } else {
             player.pause()
             playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            self.updateLockScreenElapsedTime(playbackRate: 0)
             shrinkImageVIew()
         } // if
     } // handlePlayPausedPressed
@@ -154,7 +159,6 @@ class PlayerDetailView: UIView {
         
         setupGestures()
         setupRemoteControlPlayer()
-        setupAVAudioSession()
         setupPlayerBoundaryTimeObserver()
         setupPlayerPeriodicTimeObserver()
     }
@@ -212,9 +216,8 @@ class PlayerDetailView: UIView {
         commandCenter.playCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
             self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
-            self.updateLockScreenElapsedTime()
+            self.updateLockScreenElapsedTime(playbackRate: 1)
             self.player.play()
-
             return .success
         }
         
@@ -224,8 +227,7 @@ class PlayerDetailView: UIView {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             self.miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             self.player.pause()
-            self.updateLockScreenElapsedTime()
-            
+            self.updateLockScreenElapsedTime(playbackRate: 0)
             return .success
         }
         
@@ -235,6 +237,13 @@ class PlayerDetailView: UIView {
             self.handlePlayPausePressed()
             return .success
         }
+        
+        // next track command
+        commandCenter.nextTrackCommand.isEnabled = true
+        commandCenter.nextTrackCommand.addTarget(self, action: #selector(handleNextTrackPressed))
+        
+        commandCenter.previousTrackCommand.isEnabled = true
+        commandCenter.previousTrackCommand.addTarget(self, action: #selector(handlePrevTrackPressed))
     }
     
     fileprivate func setupNowPlaying() {
@@ -246,16 +255,21 @@ class PlayerDetailView: UIView {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
+    fileprivate func setupInterruptionObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: .AVAudioSessionInterruption , object: nil)
+    }
+    
     fileprivate func updateLockScreenDurationTime() {
         guard let currentItemDuration = player.currentItem?.duration else { return }
         let durationSeconds = CMTimeGetSeconds(currentItemDuration)
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationSeconds
     }
     
-    fileprivate func updateLockScreenElapsedTime() {
+    fileprivate func updateLockScreenElapsedTime(playbackRate: Float) {
         let elapsedTime = player.currentTime()
         let elapsedSeconds = CMTimeGetSeconds(elapsedTime)
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedSeconds
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = playbackRate
     }
     
     // MARK: - Helper Functions
@@ -307,5 +321,58 @@ class PlayerDetailView: UIView {
         UIApplication.mainTabBarController()?.minimizePlayerDetails()
     } // handleDismissPressed
     
+    @objc func handleNextTrackPressed() {
+        print("Next track pressed")
+        
+        guard playlistEpisodes.count > 0 else { return }
+        
+        // grab the index
+        let currentEpisodeIndex = playlistEpisodes.index(of: self.episode)
+        
+        guard var index = currentEpisodeIndex else { return }
+        if index == playlistEpisodes.count - 1 {
+            index = 0
+        }
+        
+        let newEpisode = playlistEpisodes[index]
+        self.episode = newEpisode
+    } // handleNextTrackPressed
+    
+    @objc func handlePrevTrackPressed() {
+        print("Prev track pressed")
+        
+        guard playlistEpisodes.count > 0 else { return }
+        
+        let currentEpisodeIndex = playlistEpisodes.index(of: self.episode)
+        guard var index = currentEpisodeIndex else { return }
+
+        if index == 0 {
+            index = playlistEpisodes.count - 1
+        }
+        
+        let newEpisode = playlistEpisodes[index]
+        self.episode = newEpisode
+    } // handlePrevTrackPressed
+    
+    @objc func handleInterruption(notification: Notification) {
+        print("handle interruption")
+        
+        guard let userInfo = notification.userInfo else { return }
+        guard let type = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else { return }
+        
+        if type == AVAudioSessionInterruptionType.began.rawValue {
+            player.pause()
+            playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+        } else {
+            guard let options = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
+            
+            if options == AVAudioSessionInterruptionOptions.shouldResume.rawValue {
+                player.play()
+                playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+                miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            }
+        }
+    }
 
 } // PlayerDetailView
