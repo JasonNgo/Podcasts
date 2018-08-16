@@ -22,7 +22,7 @@ class EpisodesController: UITableViewController {
         }
     }
     
-    // MARK: Lifecycle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ class EpisodesController: UITableViewController {
         setupNavigationBarButtons()
     }
     
-    // MARK: Setup
+    // MARK: - Setup
     
     fileprivate func setupTableView() {
         tableView.tableFooterView = UIView()
@@ -39,30 +39,38 @@ class EpisodesController: UITableViewController {
     }
     
     fileprivate func setupNavigationBarButtons() {
+        
+        
+        
+        
+        
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites)),
             UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchFavourites))
         ]
     }
     
-    let favouritesPodcastKey = "favouritesPodcastKey"
-    
     @objc func handleSaveFavourites() {
         print("Favourite pressed")
         
         guard let podcast = self.podcast else { return }
-        let data = NSKeyedArchiver.archivedData(withRootObject: podcast)
-        UserDefaults.standard.set(data, forKey: favouritesPodcastKey)
+        
+        var savedPodcasts = UserDefaults.standard.savedPodcasts()
+        savedPodcasts.append(podcast)
+        
+        let data = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
+        UserDefaults.standard.set(data, forKey: UserDefaults.favouritePodcastsKey)
     }
     
     @objc func handleFetchFavourites() {
         print("Fetch pressed")
         
-        guard let data = UserDefaults.standard.data(forKey: favouritesPodcastKey) else { return }
-        guard let podcast = NSKeyedUnarchiver.unarchiveObject(with: data) as? Podcast else { return }
-        print("\(podcast.trackName)")
-        print(podcast.artistName)
-        print(podcast.artworkUrl600)
+        guard let data = UserDefaults.standard.data(forKey: UserDefaults.favouritePodcastsKey) else { return }
+        guard let podcasts = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Podcast] else { return }
+        
+        podcasts.forEach { (podcast) in
+            print("\(podcast.trackName)")
+        }
     }
 
     // MARK: Helper functions

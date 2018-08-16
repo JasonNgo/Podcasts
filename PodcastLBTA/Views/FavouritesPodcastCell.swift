@@ -10,9 +10,19 @@ import UIKit
 
 class FavouritesPodcastCell: UICollectionViewCell {
     
-    let imageView = UIImageView()
+    let favouritePodcastsImageView = UIImageView()
     let titleLabel = UILabel()
     let authorLabel = UILabel()
+    
+    var podcast: Podcast! {
+        didSet {
+            titleLabel.text = podcast.trackName
+            authorLabel.text = podcast.artistName
+            
+            guard let imageUrl = URL(string: podcast.artworkUrl600 ?? "") else { return }
+            favouritePodcastsImageView.sd_setImage(with: imageUrl, completed: nil)
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,10 +47,10 @@ class FavouritesPodcastCell: UICollectionViewCell {
     }
     
     fileprivate func setupViews() {
-        imageView.backgroundColor = .red
-        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
+        favouritePodcastsImageView.backgroundColor = .red
+        favouritePodcastsImageView.heightAnchor.constraint(equalTo: favouritePodcastsImageView.widthAnchor).isActive = true
         
-        let stackView = UIStackView(arrangedSubviews: [imageView, titleLabel, authorLabel])
+        let stackView = UIStackView(arrangedSubviews: [favouritePodcastsImageView, titleLabel, authorLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         
