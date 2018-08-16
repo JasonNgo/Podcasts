@@ -27,6 +27,7 @@ class EpisodesController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        setupNavigationBarButtons()
     }
     
     // MARK: Setup
@@ -37,6 +38,33 @@ class EpisodesController: UITableViewController {
         tableView.register(nib, forCellReuseIdentifier: cellId)
     }
     
+    fileprivate func setupNavigationBarButtons() {
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites)),
+            UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchFavourites))
+        ]
+    }
+    
+    let favouritesPodcastKey = "favouritesPodcastKey"
+    
+    @objc func handleSaveFavourites() {
+        print("Favourite pressed")
+        
+        guard let podcast = self.podcast else { return }
+        let data = NSKeyedArchiver.archivedData(withRootObject: podcast)
+        UserDefaults.standard.set(data, forKey: favouritesPodcastKey)
+    }
+    
+    @objc func handleFetchFavourites() {
+        print("Fetch pressed")
+        
+        guard let data = UserDefaults.standard.data(forKey: favouritesPodcastKey) else { return }
+        guard let podcast = NSKeyedUnarchiver.unarchiveObject(with: data) as? Podcast else { return }
+        print("\(podcast.trackName)")
+        print(podcast.artistName)
+        print(podcast.artworkUrl600)
+    }
+
     // MARK: Helper functions
     
     fileprivate func fetchEpisodes() {
