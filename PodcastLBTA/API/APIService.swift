@@ -69,4 +69,30 @@ class APIService {
         }
     } // fetchEpisodesFrom(feedUrl:completionHandler:)
     
+    func downloadEpisode(episode: Episode) {
+        print("Attempting to download episode with streamUrl: \(episode.streamUrl)")
+        
+        let downloadRequest = DownloadRequest.suggestedDownloadDestination()
+        Alamofire.download(episode.streamUrl, to: downloadRequest).downloadProgress { (progress) in
+            print(progress.fractionCompleted)
+            }.response { (response) in
+                let fileUrl = response.destinationURL?.absoluteString
+                
+                // updateDownloadedEpisode with fileUrl
+                var downloadedEpisodes = UserDefaults.standard.savedEpisodes()
+                guard let index = downloadedEpisodes.index(of: episode) else { return }
+                downloadedEpisodes[index].fileUrl = fileUrl ?? ""
+                
+                // update UserDefaults with new episode
+                let encoder = JSONEncoder()
+                do {
+                    let data = try encoder.encode(downloadedEpisodes)
+                    UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
+                } catch let error {
+                    print("There was an error attempting to save list of episodes to UserDefaults", error)
+                }
+
+        }
+    }
+    
 }

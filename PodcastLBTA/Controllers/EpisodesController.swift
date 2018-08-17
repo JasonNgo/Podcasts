@@ -122,6 +122,7 @@ class EpisodesController: UITableViewController {
         let downloadAction = UITableViewRowAction(style: .normal, title: "Download") { (_, _) in
             let episode = self.episodes[indexPath.row]
             UserDefaults.standard.saveEpisode(episode: episode)
+            APIService.shared.downloadEpisode(episode: episode)
         }
         
         return [downloadAction]

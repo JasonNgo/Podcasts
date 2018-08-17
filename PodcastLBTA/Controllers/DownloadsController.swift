@@ -10,19 +10,20 @@ import UIKit
 
 class DownloadsController: UITableViewController {
     
+    fileprivate let cellId = "cellEpisodeId"
     var savedEpisodes = UserDefaults.standard.savedEpisodes()
     
-    fileprivate let cellId = "cellEpisodeId"
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupTableView()
-    }
+    // MARK: - Lifecycle Functions
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         savedEpisodes = UserDefaults.standard.savedEpisodes()
         tableView?.reloadData()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupTableView()
     }
     
     // MARK: - Setup Functions
@@ -56,6 +57,12 @@ class DownloadsController: UITableViewController {
         }
         
         return [deleteAction]
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let episode = self.savedEpisodes[indexPath.row]
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.savedEpisodes)
+        
     }
     
 }
