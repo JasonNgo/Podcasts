@@ -15,11 +15,22 @@ class FavouritesController: UICollectionViewController, UICollectionViewDelegate
     
     var podcasts = UserDefaults.standard.savedPodcasts()
     
+    // MARK: - Lifecycle Functions
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        podcasts = UserDefaults.standard.savedPodcasts()
+        collectionView?.reloadData()
+        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = nil
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupCollectionView()
     }
+    
+    // MARK: - Setup Functions
     
     fileprivate func setupCollectionView() {
         collectionView?.backgroundColor = .white
@@ -28,6 +39,8 @@ class FavouritesController: UICollectionViewController, UICollectionViewDelegate
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture))
         collectionView?.addGestureRecognizer(gesture)
     }
+    
+    // MARK: - Selector Functions
     
     @objc func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
         let location = gesture.location(in: self.collectionView)
@@ -58,10 +71,16 @@ class FavouritesController: UICollectionViewController, UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! FavouritesPodcastCell
         let podcast = podcasts[indexPath.item]
-
         cell.podcast = podcast
-        
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let podcast = podcasts[indexPath.item]
+        let episodesController = EpisodesController()
+        episodesController.podcast = podcast
+        
+        navigationController?.pushViewController(episodesController, animated: true)
     }
     
     // MARK: - UICollectionViewDelegateFlowLayout

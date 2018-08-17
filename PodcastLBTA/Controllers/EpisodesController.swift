@@ -40,14 +40,17 @@ class EpisodesController: UITableViewController {
     
     fileprivate func setupNavigationBarButtons() {
         
+        let savedPodcasts = UserDefaults.standard.savedPodcasts()
         
+        let podcastHasBeenFavourited = savedPodcasts.index {
+            return $0.trackName == self.podcast?.trackName && $0.artistName == self.podcast?.artistName
+        }
         
-        
-        
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites)),
-            UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchFavourites))
-        ]
+        if podcastHasBeenFavourited != nil {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites))
+        }
     }
     
     @objc func handleSaveFavourites() {
@@ -60,17 +63,9 @@ class EpisodesController: UITableViewController {
         
         let data = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
         UserDefaults.standard.set(data, forKey: UserDefaults.favouritePodcastsKey)
-    }
-    
-    @objc func handleFetchFavourites() {
-        print("Fetch pressed")
         
-        guard let data = UserDefaults.standard.data(forKey: UserDefaults.favouritePodcastsKey) else { return }
-        guard let podcasts = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Podcast] else { return }
-        
-        podcasts.forEach { (podcast) in
-            print("\(podcast.trackName)")
-        }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
+        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
     }
 
     // MARK: Helper functions
