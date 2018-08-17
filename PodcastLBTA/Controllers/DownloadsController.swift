@@ -61,8 +61,25 @@ class DownloadsController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = self.savedEpisodes[indexPath.row]
-        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.savedEpisodes)
         
+        if episode.fileUrl != nil {
+            UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.savedEpisodes)
+        } else {
+            let alertController = UIAlertController(title: "Could not find fileUrl", message: "There was an error downloading the episode would you like to redownload the episode?", preferredStyle: .actionSheet)
+            
+            let downloadAction = UIAlertAction(title: "Download", style: .default) { (_) in
+                APIService.shared.downloadEpisode(episode: episode)
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+                print("Cancel action pressed")
+            }
+            
+            alertController.addAction(downloadAction)
+            alertController.addAction(cancelAction)
+            
+            present(alertController, animated: true)
+        }
     }
     
 }
