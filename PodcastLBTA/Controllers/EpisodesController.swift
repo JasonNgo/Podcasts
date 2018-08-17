@@ -118,4 +118,13 @@ class EpisodesController: UITableViewController {
         return episodes.isEmpty ? 400 : 0
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let downloadAction = UITableViewRowAction(style: .normal, title: "Download") { (_, _) in
+            let episode = self.episodes[indexPath.row]
+            UserDefaults.standard.saveEpisode(episode: episode)
+        }
+        
+        return [downloadAction]
+    }
+    
 } // EpisodesController

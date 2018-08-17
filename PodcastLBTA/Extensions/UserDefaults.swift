@@ -11,6 +11,7 @@ import Foundation
 extension UserDefaults {
     
     static let favouritePodcastsKey = "favouritePodcastsKey"
+    static let savedEpisodesKey = "savedEpisodesKey"
     
     func savedPodcasts() -> [Podcast] {
         guard let savedPodcastsData = UserDefaults.standard.data(forKey: UserDefaults.favouritePodcastsKey) else { return [] }
@@ -28,5 +29,55 @@ extension UserDefaults {
         
         let data = NSKeyedArchiver.archivedData(withRootObject: filteredPodcasts)
         UserDefaults.standard.set(data, forKey: UserDefaults.favouritePodcastsKey)
+    }
+    
+    func savedEpisodes() -> [Episode] {
+        guard let savedEpisodesData = UserDefaults.standard.data(forKey: UserDefaults.savedEpisodesKey) else { return [] }
+        
+        let decoder = JSONDecoder()
+        do {
+            let episodes = try decoder.decode([Episode].self, from: savedEpisodesData)
+            return episodes
+        } catch let error {
+            print("There was an error attempting to decode saved episodes object:", error)
+            return []
+        }
+    }
+    
+    func saveEpisode(episode: Episode) {
+        let encoder = JSONEncoder()
+        var savedEpisodes = self.savedEpisodes()
+        
+        let episodeHasBeenDownloaded = savedEpisodes.index {
+            return $0.title == episode.title && $0.author == episode.author
+        }
+        
+        guard episodeHasBeenDownloaded == nil else { return }
+        
+        do {
+            savedEpisodes.append(episode)
+            let data = try encoder.encode(savedEpisodes)
+            UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
+        } catch let error {
+            print("There was an error attempting to convert Episode to JSON format", error)
+        }
+    }
+    
+    func removeEpisode(episode: Episode) {
+        let savedEpisodes = self.savedEpisodes()
+        
+        // this gives me an array of episodes. now i need to save it
+        let filteredEpisodes = savedEpisodes.filter { (ep) -> Bool in
+            return ep.title != episode.title && ep.pubDate != episode.pubDate
+        }
+        
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(filteredEpisodes)
+            UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
+        } catch let error {
+            print("There was an error attempting to encode saved episodes:", error)
+        }
+        
     }
 }
