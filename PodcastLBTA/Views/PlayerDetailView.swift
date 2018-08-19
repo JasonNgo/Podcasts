@@ -282,7 +282,6 @@ class PlayerDetailView: UIView {
         if let fileUrlString = episode.fileUrl {
             guard let fileUrl = URL(string: fileUrlString) else { return }
             let fileName = fileUrl.lastPathComponent
-            
             guard var trueLocation = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
             trueLocation.appendPathComponent(fileName)
             

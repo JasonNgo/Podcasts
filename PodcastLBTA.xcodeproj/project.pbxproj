@@ -27,7 +27,6 @@
 		7D4FFA1121234B4700BB9620 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FFA1021234B4700BB9620 /* CMTime.swift */; };
 		7D54166B2123BB7800D4C852 /* PlayerDetailView+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D54166A2123BB7800D4C852 /* PlayerDetailView+Gestures.swift */; };
 		7DBDE65D211F69BD0004DD72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */; };
-		7DBDE65F211F69BD0004DD72 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE65E211F69BD0004DD72 /* ViewController.swift */; };
 		7DBDE664211F69BE0004DD72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DBDE663211F69BE0004DD72 /* Assets.xcassets */; };
 		7DBDE667211F69BE0004DD72 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DBDE665211F69BE0004DD72 /* LaunchScreen.storyboard */; };
 		7DBDE66F211F6BD20004DD72 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE66E211F6BD20004DD72 /* MainTabBarController.swift */; };
@@ -57,7 +56,6 @@
 		7D54166A2123BB7800D4C852 /* PlayerDetailView+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerDetailView+Gestures.swift"; sourceTree = "<group>"; };
 		7DBDE659211F69BD0004DD72 /* PodcastLBTA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PodcastLBTA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7DBDE65E211F69BD0004DD72 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7DBDE663211F69BE0004DD72 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7DBDE666211F69BE0004DD72 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7DBDE668211F69BE0004DD72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -139,7 +137,6 @@
 				7DBDE672211F81A50004DD72 /* Models */,
 				7DBDE671211F81A00004DD72 /* Views */,
 				7DBDE670211F819B0004DD72 /* Controllers */,
-				7DBDE65E211F69BD0004DD72 /* ViewController.swift */,
 			);
 			path = PodcastLBTA;
 			sourceTree = "<group>";
@@ -320,7 +317,6 @@
 				7D4FFA0921220F3700BB9620 /* String.swift in Sources */,
 				7D4FFA1121234B4700BB9620 /* CMTime.swift in Sources */,
 				7D390F362125C04500E5FE4C /* FavouritesPodcastCell.swift in Sources */,
-				7DBDE65F211F69BD0004DD72 /* ViewController.swift in Sources */,
 				7DBDE65D211F69BD0004DD72 /* AppDelegate.swift in Sources */,
 				7D2ECC43211FD28500E8C580 /* EpisodesController.swift in Sources */,
 				7DBDE66F211F6BD20004DD72 /* MainTabBarController.swift in Sources */,

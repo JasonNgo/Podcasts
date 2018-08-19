@@ -53,6 +53,8 @@ class EpisodesController: UITableViewController {
         }
     }
     
+    // MARK: - Selector Functions
+    
     @objc func handleSaveFavourites() {
         print("Favourite pressed")
         

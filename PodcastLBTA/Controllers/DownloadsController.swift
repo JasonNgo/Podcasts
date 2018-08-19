@@ -24,6 +24,7 @@ class DownloadsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        setupObservers()
     }
     
     // MARK: - Setup Functions
@@ -31,6 +32,41 @@ class DownloadsController: UITableViewController {
     fileprivate func setupTableView() {
         let nib = UINib(nibName: "EpisodeCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: cellId)
+    }
+    
+    fileprivate func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadProgress), name: .downloadProgress, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadComplete), name: .downloadComplete, object: nil)
+    }
+    
+    // MARK: - Selector Functions
+    
+    @objc func handleDownloadProgress(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        
+        guard let episodeTitle = userInfo["title"] as? String else { return }
+        guard let episodeAuthor = userInfo["author"] as? String else { return }
+        guard let downloadProgress = userInfo["progress"] as? Double else { return }
+        
+        guard let index = savedEpisodes.index(where: { $0.title == episodeTitle && $0.author == episodeAuthor }) else { return }
+        guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? EpisodeCell else { return }
+        
+        cell.downloadProgressLabel.isHidden = false
+        cell.downloadProgressLabel.text = "\(Int(downloadProgress * 100))%"
+    }
+    
+    @objc func handleDownloadComplete(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        
+        guard let episodeTitle = userInfo["title"] as? String else { return }
+        guard let episodeAuthor = userInfo["author"] as? String else { return }
+        guard let fileUrl = userInfo["fileUrl"] as? String else { return }
+        
+        guard let index = savedEpisodes.index(where: { $0.title == episodeTitle && $0.author == episodeAuthor }) else { return }
+        guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? EpisodeCell else { return }
+        
+        cell.downloadProgressLabel.isHidden = true
+        savedEpisodes[index].fileUrl = fileUrl
     }
     
     // MARK: - UITableViewController

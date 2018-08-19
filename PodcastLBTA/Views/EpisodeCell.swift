@@ -15,6 +15,7 @@ class EpisodeCell: UITableViewCell {
     @IBOutlet var publicationDateLabel: UILabel!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var downloadProgressLabel: UILabel!
     
     let df: DateFormatter = {
         var dateFormatter = DateFormatter()

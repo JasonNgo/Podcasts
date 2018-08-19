@@ -10,6 +10,11 @@ import Foundation
 import Alamofire
 import FeedKit
 
+extension NSNotification.Name {
+    static let downloadProgress =  NSNotification.Name("downloadProgress")
+    static let downloadComplete =  NSNotification.Name("downloadComplete")
+}
+
 class APIService {
     
     // singleton
@@ -74,14 +79,30 @@ class APIService {
         
         let downloadRequest = DownloadRequest.suggestedDownloadDestination()
         Alamofire.download(episode.streamUrl, to: downloadRequest).downloadProgress { (progress) in
-            print(progress.fractionCompleted)
+            
+            let userInfo: [String : Any] = [
+                "title": episode.title,
+                "author": episode.author,
+                "progress": progress.fractionCompleted
+            ]
+            
+            NotificationCenter.default.post(name: .downloadProgress, object: nil, userInfo: userInfo)
+            
             }.response { (response) in
-                let fileUrl = response.destinationURL?.absoluteString
+                guard let fileUrl = response.destinationURL?.absoluteString else { return }
                 
                 // updateDownloadedEpisode with fileUrl
                 var downloadedEpisodes = UserDefaults.standard.savedEpisodes()
                 guard let index = downloadedEpisodes.index(of: episode) else { return }
-                downloadedEpisodes[index].fileUrl = fileUrl ?? ""
+                downloadedEpisodes[index].fileUrl = fileUrl
+                
+                let userInfo: [String : Any] = [
+                    "title": episode.title,
+                    "author": episode.author,
+                    "fileUrl": fileUrl
+                ]
+                
+                NotificationCenter.default.post(name: .downloadComplete, object: nil, userInfo: userInfo)
                 
                 // update UserDefaults with new episode
                 let encoder = JSONEncoder()
