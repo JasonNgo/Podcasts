@@ -1,4 +1,4 @@
-# iOS-Practise-Podcast
+Podcast
 (PRACTISE) - Podcast Player
 
 An Instagram clone powered by Googles Firebase.
