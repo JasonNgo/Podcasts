@@ -1,7 +1,4 @@
 Podcast
-(PRACTISE) - Podcast Player
-
-An Instagram clone powered by Googles Firebase.
 
 The program was developped using the teachings of the Podcast course created by Brian Voong from www.letsbuildthatapp.com.
 
