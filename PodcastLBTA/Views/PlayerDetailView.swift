@@ -175,7 +175,7 @@ class PlayerDetailView: UIView {
     }
     
     fileprivate func setupPlayerBoundaryTimeObserver() {
-        let time = CMTimeMake(1, 3)
+        let time = CMTimeMake(value: 1, timescale: 3)
         let times = [NSValue(time: time)]
         
         player.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
@@ -186,7 +186,7 @@ class PlayerDetailView: UIView {
     }
     
     fileprivate func setupPlayerPeriodicTimeObserver() {
-        let interval = CMTimeMake(1, 2)
+        let interval = CMTimeMake(value: 1, timescale: 2)
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
             let displayString = time.toDisplayString()
             self?.currentTimeLabel.text = displayString
@@ -198,7 +198,7 @@ class PlayerDetailView: UIView {
     
     fileprivate func setupAVAudioSession() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .interruptSpokenAudioAndMixWithOthers)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch let error {
             print("There was an error activating the av audio session:", error)
@@ -256,7 +256,7 @@ class PlayerDetailView: UIView {
     }
     
     fileprivate func setupInterruptionObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: .AVAudioSessionInterruption , object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: AVAudioSession.interruptionNotification , object: nil)
     }
     
     fileprivate func updateLockScreenDurationTime() {
@@ -313,7 +313,7 @@ class PlayerDetailView: UIView {
     
     fileprivate func updateCurrentTimeSlider() {
         let currentTimeSeconds = CMTimeGetSeconds(player.currentTime())
-        let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(1, 1))
+        let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
         
         let percentage = currentTimeSeconds / durationSeconds
         currentTimeSlider.value = Float(percentage)
@@ -321,7 +321,7 @@ class PlayerDetailView: UIView {
     
     fileprivate func seekToCurrentTimeWith(delta: Int64) {
         let currentTime = player.currentTime()
-        let deltaTime = CMTimeMake(delta, 1)
+        let deltaTime = CMTimeMake(value: delta, timescale: 1)
         
         let seekTime = CMTimeAdd(currentTime, deltaTime)
         player.seek(to: seekTime)
@@ -372,14 +372,14 @@ class PlayerDetailView: UIView {
         guard let userInfo = notification.userInfo else { return }
         guard let type = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else { return }
         
-        if type == AVAudioSessionInterruptionType.began.rawValue {
+        if type == AVAudioSession.InterruptionType.began.rawValue {
             player.pause()
             playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
             miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
         } else {
             guard let options = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
             
-            if options == AVAudioSessionInterruptionOptions.shouldResume.rawValue {
+            if options == AVAudioSession.InterruptionOptions.shouldResume.rawValue {
                 player.play()
                 playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
                 miniPlayerPlayPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)

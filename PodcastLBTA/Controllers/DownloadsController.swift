@@ -27,48 +27,6 @@ class DownloadsController: UITableViewController {
         setupObservers()
     }
     
-    // MARK: - Setup Functions
-    
-    fileprivate func setupTableView() {
-        let nib = UINib(nibName: "EpisodeCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: cellId)
-    }
-    
-    fileprivate func setupObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadProgress), name: .downloadProgress, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadComplete), name: .downloadComplete, object: nil)
-    }
-    
-    // MARK: - Selector Functions
-    
-    @objc func handleDownloadProgress(notification: Notification) {
-        guard let userInfo = notification.userInfo else { return }
-        
-        guard let episodeTitle = userInfo["title"] as? String else { return }
-        guard let episodeAuthor = userInfo["author"] as? String else { return }
-        guard let downloadProgress = userInfo["progress"] as? Double else { return }
-        
-        guard let index = savedEpisodes.index(where: { $0.title == episodeTitle && $0.author == episodeAuthor }) else { return }
-        guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? EpisodeCell else { return }
-        
-        cell.downloadProgressLabel.isHidden = false
-        cell.downloadProgressLabel.text = "\(Int(downloadProgress * 100))%"
-    }
-    
-    @objc func handleDownloadComplete(notification: Notification) {
-        guard let userInfo = notification.userInfo else { return }
-        
-        guard let episodeTitle = userInfo["title"] as? String else { return }
-        guard let episodeAuthor = userInfo["author"] as? String else { return }
-        guard let fileUrl = userInfo["fileUrl"] as? String else { return }
-        
-        guard let index = savedEpisodes.index(where: { $0.title == episodeTitle && $0.author == episodeAuthor }) else { return }
-        guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? EpisodeCell else { return }
-        
-        cell.downloadProgressLabel.isHidden = true
-        savedEpisodes[index].fileUrl = fileUrl
-    }
-    
     // MARK: - UITableViewController
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,7 +35,7 @@ class DownloadsController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! EpisodeCell
-        cell.episode = self.savedEpisodes[indexPath.row]
+        cell.episode = savedEpisodes[indexPath.row]
         return cell
     }
     
@@ -118,4 +76,52 @@ class DownloadsController: UITableViewController {
         }
     }
     
+} // Downloads Controller
+
+// MARK: - Setup Functions
+
+private extension DownloadsController {
+    func setupTableView() {
+        let nib = UINib(nibName: "EpisodeCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellId)
+    }
+    
+    func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadProgress), name: .downloadProgress, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadComplete), name: .downloadComplete, object: nil)
+    }
+}
+
+// MARK: - Selector Functions
+
+private extension DownloadsController {
+    @objc func handleDownloadProgress(notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let episodeTitle = userInfo["title"] as? String,
+            let episodeAuthor = userInfo["author"] as? String,
+            let downloadProgress = userInfo["progress"] as? Double,
+            let index = savedEpisodes.index(where: { $0.title == episodeTitle && $0.author == episodeAuthor }),
+            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? EpisodeCell else {
+                return
+        }
+        
+        cell.downloadProgressLabel.isHidden = false
+        cell.downloadProgressLabel.text = "\(Int(downloadProgress * 100))%"
+    }
+    
+    @objc func handleDownloadComplete(notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let episodeTitle = userInfo["title"] as? String,
+            let episodeAuthor = userInfo["author"] as? String,
+            let fileUrl = userInfo["fileUrl"] as? String,
+            let index = savedEpisodes.index(where: { $0.title == episodeTitle && $0.author == episodeAuthor }),
+            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? EpisodeCell else {
+                return
+        }
+        
+        cell.downloadProgressLabel.isHidden = true
+        savedEpisodes[index].fileUrl = fileUrl
+    }
 }

@@ -9,12 +9,11 @@
 import UIKit
 import Alamofire
 
-
-
-class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
+class PodcastsSearchController: UITableViewController {
     
     fileprivate let cellId = "podcastCell"
     fileprivate var timer: Timer?
+    fileprivate let rowHeight: CGFloat = 116
     
     var podcasts = [Podcast]()
     
@@ -25,38 +24,6 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
         
         setupSearchController()
         setupTableView()
-        
-        searchBar(searchController.searchBar, textDidChange: "Voong")
-    }
-    
-    // MARK: - Setup functions
-    
-    fileprivate func setupSearchController() {
-        self.definesPresentationContext = true
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.delegate = self
-    }
-    
-    fileprivate func setupTableView() {
-        tableView.tableFooterView = UIView()
-        let nib = UINib(nibName: "PodcastCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: cellId)
-    }
-    
-    // MARK: - UISearchBarDelegate
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-        
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in
-            APIService.shared.fetchPodcastsWith(searchText: searchText) { (podcasts) in
-                self.podcasts = podcasts
-                self.tableView.reloadData()
-            }
-        })
     }
     
     // MARK: - UITableViewDelegate
@@ -78,24 +45,53 @@ class PodcastsSearchController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 116
+        return rowHeight
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PodcastCell
-        let podcast = podcasts[indexPath.row]
-        
-        cell.podcast = podcast
-
+        cell.podcast = podcasts[indexPath.row]
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let podcast = podcasts[indexPath.row]
         let episodesController = EpisodesController()
-        episodesController.podcast = podcast
-        
+        episodesController.podcast = podcasts[indexPath.row]
         navigationController?.pushViewController(episodesController, animated: true)
     }
     
 } // PodcastsSearchController
+
+// MARK: - Setup Functions
+
+private extension PodcastsSearchController {
+    func setupSearchController() {
+        self.definesPresentationContext = true
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+    }
+    
+    func setupTableView() {
+        tableView.tableFooterView = UIView()
+        let nib = UINib(nibName: "PodcastCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellId)
+    }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension PodcastsSearchController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print(searchText)
+        
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in
+            APIService.shared.fetchPodcastsWith(searchText: searchText) { (podcasts) in
+                self.podcasts = podcasts
+                self.tableView.reloadData()
+            }
+        })
+    }
+}

@@ -17,25 +17,19 @@ extension NSNotification.Name {
 
 class APIService {
     
-    // singleton
     static let shared = APIService()
-    
-    // base url
-    let baseiTunesSearchUrl = "https://itunes.apple.com/search"
     
     struct SearchResult: Decodable {
         var resultCount: Int?
         var results: [Podcast]?
     }
     
+    let baseiTunesSearchUrl = "https://itunes.apple.com/search"
+    
     func fetchPodcastsWith(searchText: String, completionHandler: @escaping ([Podcast]) -> Void) {
         print("searching for podcasts...")
         
-        let parameters = [
-            "term": searchText,
-            "media": "podcast"
-        ]
-        
+        let parameters = ["term": searchText, "media": "podcast"]
         Alamofire.request(baseiTunesSearchUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
             if let err = dataResponse.error {
                 print("There was an error fetching list of podcasts", err)
@@ -51,8 +45,8 @@ class APIService {
             } catch let err {
                 print("There was an error attempting to decode searchResult:", err)
             }
-        } // request
-    } // fetchPodcastsWith(searchText:completionHandler:)
+        }
+    }
     
     func fetchEpisodesFrom(feedUrl: String, completionHandler: @escaping ([Episode]) -> Void) {
         print("searching for episodes...")
@@ -88,31 +82,30 @@ class APIService {
             
             NotificationCenter.default.post(name: .downloadProgress, object: nil, userInfo: userInfo)
             
-            }.response { (response) in
-                guard let fileUrl = response.destinationURL?.absoluteString else { return }
-                
-                // updateDownloadedEpisode with fileUrl
-                var downloadedEpisodes = UserDefaults.standard.savedEpisodes()
-                guard let index = downloadedEpisodes.index(of: episode) else { return }
-                downloadedEpisodes[index].fileUrl = fileUrl
-                
-                let userInfo: [String : Any] = [
-                    "title": episode.title,
-                    "author": episode.author,
-                    "fileUrl": fileUrl
-                ]
-                
-                NotificationCenter.default.post(name: .downloadComplete, object: nil, userInfo: userInfo)
-                
-                // update UserDefaults with new episode
-                let encoder = JSONEncoder()
-                do {
-                    let data = try encoder.encode(downloadedEpisodes)
-                    UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
-                } catch let error {
-                    print("There was an error attempting to save list of episodes to UserDefaults", error)
-                }
-
+        }.response { (response) in
+            guard let fileUrl = response.destinationURL?.absoluteString else { return }
+            
+            // updateDownloadedEpisode with fileUrl
+            var downloadedEpisodes = UserDefaults.standard.savedEpisodes()
+            guard let index = downloadedEpisodes.index(of: episode) else { return }
+            downloadedEpisodes[index].fileUrl = fileUrl
+            
+            let userInfo: [String : Any] = [
+                "title": episode.title,
+                "author": episode.author,
+                "fileUrl": fileUrl
+            ]
+            
+            NotificationCenter.default.post(name: .downloadComplete, object: nil, userInfo: userInfo)
+            
+            // update UserDefaults with new episode
+            let encoder = JSONEncoder()
+            do {
+                let data = try encoder.encode(downloadedEpisodes)
+                UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
+            } catch let error {
+                print("There was an error attempting to save list of episodes to UserDefaults", error)
+            }
         }
     }
     

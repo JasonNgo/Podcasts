@@ -9,22 +9,19 @@
 import Foundation
 
 extension UserDefaults {
-    
     static let favouritePodcastsKey = "favouritePodcastsKey"
     static let savedEpisodesKey = "savedEpisodesKey"
     
     func savedPodcasts() -> [Podcast] {
         guard let savedPodcastsData = UserDefaults.standard.data(forKey: UserDefaults.favouritePodcastsKey) else { return [] }
         guard let savedPodcasts = NSKeyedUnarchiver.unarchiveObject(with: savedPodcastsData) as? [Podcast] else { return [] }
-        
         return savedPodcasts
     }
     
     func deletePodcast(podcast: Podcast) {
         let podcasts = savedPodcasts()
-        let filteredPodcasts = podcasts.filter { (pod) -> Bool in
-            return pod.trackName != podcast.trackName &&
-                    pod.artistName != podcast.artistName
+        let filteredPodcasts = podcasts.filter {
+            return $0.trackName != podcast.trackName && $0.artistName != podcast.artistName
         }
         
         let data = NSKeyedArchiver.archivedData(withRootObject: filteredPodcasts)
@@ -65,10 +62,8 @@ extension UserDefaults {
     
     func removeEpisode(episode: Episode) {
         let savedEpisodes = self.savedEpisodes()
-        
-        // this gives me an array of episodes. now i need to save it
-        let filteredEpisodes = savedEpisodes.filter { (ep) -> Bool in
-            return ep.title != episode.title && ep.pubDate != episode.pubDate
+        let filteredEpisodes = savedEpisodes.filter {
+            return $0.title != episode.title && $0.pubDate != episode.pubDate
         }
         
         let encoder = JSONEncoder()
@@ -78,6 +73,6 @@ extension UserDefaults {
         } catch let error {
             print("There was an error attempting to encode saved episodes:", error)
         }
-        
     }
-}
+    
+} // Extension UserDefaults

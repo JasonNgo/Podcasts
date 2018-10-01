@@ -29,61 +29,6 @@ class EpisodesController: UITableViewController {
         setupTableView()
         setupNavigationBarButtons()
     }
-    
-    // MARK: - Setup
-    
-    fileprivate func setupTableView() {
-        tableView.tableFooterView = UIView()
-        let nib = UINib(nibName: "EpisodeCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: cellId)
-    }
-    
-    fileprivate func setupNavigationBarButtons() {
-        
-        let savedPodcasts = UserDefaults.standard.savedPodcasts()
-        
-        let podcastHasBeenFavourited = savedPodcasts.index {
-            return $0.trackName == self.podcast?.trackName && $0.artistName == self.podcast?.artistName
-        }
-        
-        if podcastHasBeenFavourited != nil {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites))
-        }
-    }
-    
-    // MARK: - Selector Functions
-    
-    @objc func handleSaveFavourites() {
-        print("Favourite pressed")
-        
-        guard let podcast = self.podcast else { return }
-        
-        var savedPodcasts = UserDefaults.standard.savedPodcasts()
-        savedPodcasts.append(podcast)
-        
-        let data = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
-        UserDefaults.standard.set(data, forKey: UserDefaults.favouritePodcastsKey)
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
-        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
-    }
-
-    // MARK: Helper functions
-    
-    fileprivate func fetchEpisodes() {
-        print("attempting to fetch episodes from RSS feed url: \(podcast?.feedUrl ?? "")")
-        
-        guard let unwrappedFeedUrl = podcast?.feedUrl else { return }
-        APIService.shared.fetchEpisodesFrom(feedUrl: unwrappedFeedUrl) { (episodes) in
-            self.episodes = episodes
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    } // fetchEpisodes
 
     // MARK: - UITableViewDelegate
     
@@ -93,9 +38,7 @@ class EpisodesController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! EpisodeCell
-        let episode = episodes[indexPath.row]
-        
-        cell.episode = episode
+        cell.episode = episodes[indexPath.row]
         return cell
     }
     
@@ -109,10 +52,9 @@ class EpisodesController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        let activityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicatorView.color = .darkGray
         activityIndicatorView.startAnimating()
-        
         return activityIndicatorView
     }
     
@@ -131,3 +73,58 @@ class EpisodesController: UITableViewController {
     }
     
 } // EpisodesController
+
+// MARK: - Setup Functions
+
+private extension EpisodesController {
+    func setupTableView() {
+        tableView.tableFooterView = UIView()
+        let nib = UINib(nibName: "EpisodeCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellId)
+    }
+    
+    func setupNavigationBarButtons() {
+        let savedPodcasts = UserDefaults.standard.savedPodcasts()
+        
+        let podcastHasBeenFavourited = savedPodcasts.index {
+            $0.trackName == self.podcast?.trackName && $0.artistName == self.podcast?.artistName
+        }
+        
+        if podcastHasBeenFavourited != nil {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites))
+        }
+    }
+}
+
+// MARK: - Selector/Helper Functions
+
+private extension EpisodesController {
+    @objc func handleSaveFavourites() {
+        print("Favourite pressed")
+        guard let podcast = self.podcast else { return }
+        
+        var savedPodcasts = UserDefaults.standard.savedPodcasts()
+        savedPodcasts.append(podcast)
+        
+        let data = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
+        UserDefaults.standard.set(data, forKey: UserDefaults.favouritePodcastsKey)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
+        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
+    }
+    
+    func fetchEpisodes() {
+        print("attempting to fetch episodes from RSS feed url: \(podcast?.feedUrl ?? "")")
+        
+        guard let unwrappedFeedUrl = podcast?.feedUrl else { return }
+        APIService.shared.fetchEpisodesFrom(feedUrl: unwrappedFeedUrl) { (episodes) in
+            self.episodes = episodes
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+}

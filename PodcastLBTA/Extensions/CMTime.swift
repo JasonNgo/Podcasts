@@ -10,7 +10,6 @@ import Foundation
 import AVKit
 
 extension CMTime {
-    
     func toDisplayString() -> String {
         guard CMTimeGetSeconds(self).isNormal else { return "--:--" }
         
@@ -22,5 +21,4 @@ extension CMTime {
         let timeFormatString = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
         return timeFormatString
     }
-    
 } // CMTime Extension
