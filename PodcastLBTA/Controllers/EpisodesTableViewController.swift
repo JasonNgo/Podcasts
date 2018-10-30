@@ -1,5 +1,5 @@
 //
-//  EpisodesController.swift
+//  EpisodesTableViewController.swift
 //  PodcastLBTA
 //
 //  Created by Jason Ngo on 2018-08-11.
@@ -9,16 +9,17 @@
 import UIKit
 import FeedKit
 
-class EpisodesController: UITableViewController {
+class EpisodesTableViewController: UITableViewController {
     
-    fileprivate let cellId = "episodeCell"
+    // constants
+    fileprivate let episodeCellId = "episodeCell"
+    fileprivate let episodeCellRowHeight: CGFloat = 132
     
-    var episodes = [Episode]()
-    
+    var episodes: [Episode] = []
     var podcast: Podcast? {
         didSet {
             navigationItem.title = podcast?.trackName
-            fetchEpisodes()
+            fetchPodcastEpisodes()
         }
     }
     
@@ -26,8 +27,8 @@ class EpisodesController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
-        setupNavigationBarButtons()
+        setupEpisodesTableView()
+        setupEpisodesNavigationBarButtons()
     }
 
     // MARK: - UITableViewDelegate
@@ -37,13 +38,13 @@ class EpisodesController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! EpisodeCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: episodeCellId, for: indexPath) as! EpisodeCell
         cell.episode = episodes[indexPath.row]
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 132
+        return episodeCellRowHeight
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -72,18 +73,19 @@ class EpisodesController: UITableViewController {
         return [downloadAction]
     }
     
-} // EpisodesController
+} // EpisodesTableViewController
 
 // MARK: - Setup Functions
 
-private extension EpisodesController {
-    func setupTableView() {
+private extension EpisodesTableViewController {
+    
+    func setupEpisodesTableView() {
+        let episodeCellNib = UINib(nibName: "EpisodeCell", bundle: nil)
+        tableView.register(episodeCellNib, forCellReuseIdentifier: episodeCellId)
         tableView.tableFooterView = UIView()
-        let nib = UINib(nibName: "EpisodeCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: cellId)
     }
     
-    func setupNavigationBarButtons() {
+    func setupEpisodesNavigationBarButtons() {
         let savedPodcasts = UserDefaults.standard.savedPodcasts()
         
         let podcastHasBeenFavourited = savedPodcasts.index {
@@ -100,7 +102,8 @@ private extension EpisodesController {
 
 // MARK: - Selector/Helper Functions
 
-private extension EpisodesController {
+private extension EpisodesTableViewController {
+    
     @objc func handleSaveFavourites() {
         print("Favourite pressed")
         guard let podcast = self.podcast else { return }
@@ -108,14 +111,14 @@ private extension EpisodesController {
         var savedPodcasts = UserDefaults.standard.savedPodcasts()
         savedPodcasts.append(podcast)
         
-        let data = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
-        UserDefaults.standard.set(data, forKey: UserDefaults.favouritePodcastsKey)
+        let savedPodcastsArchiveData = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
+        UserDefaults.standard.set(savedPodcastsArchiveData, forKey: UserDefaults.favouritePodcastsKey)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
         UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
     }
     
-    func fetchEpisodes() {
+    func fetchPodcastEpisodes() {
         print("attempting to fetch episodes from RSS feed url: \(podcast?.feedUrl ?? "")")
         
         guard let unwrappedFeedUrl = podcast?.feedUrl else { return }
@@ -127,4 +130,5 @@ private extension EpisodesController {
             }
         }
     }
+    
 }

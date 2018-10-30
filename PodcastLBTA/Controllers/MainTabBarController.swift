@@ -18,14 +18,15 @@ class MainTabBarController: UITabBarController {
     // floating player
     let playerDetailView = PlayerDetailView.initFromNib()
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupControllerStyles()
-        setupTabBarControllers()
+        setupMainTabBarControllerStyle()
+        setupMainTabBarControllers()
         setupPlayerDetailView()
     }
     
+    // MARK: - Floating Player
     func maximizePlayerDetails(episode: Episode?, playlistEpisodes: [Episode] = []) {
         minimizedTopAnchorConstraint.isActive = false
         maximizedTopAnchorConstraint.isActive = true
@@ -63,27 +64,27 @@ class MainTabBarController: UITabBarController {
 } // MainTabBarController
 
 // MARK: - Setup Functions
-
-extension MainTabBarController {
-    fileprivate func setupControllerStyles() {
+fileprivate extension MainTabBarController {
+    
+    func setupMainTabBarControllerStyle() {
         view.backgroundColor = .white
         tabBar.tintColor = .purple
         UINavigationBar.appearance().prefersLargeTitles = true
     }
     
-    fileprivate func setupTabBarControllers() {
-        let flowLayout = UICollectionViewFlowLayout()
-        let favouritesCollectionView = FavouritesController(collectionViewLayout: flowLayout)
+    func setupMainTabBarControllers() {
+        let collectionViewLayout = UICollectionViewFlowLayout()
+        let favouritesCollectionView = FavouritesCollectionViewController(collectionViewLayout: collectionViewLayout)
         
         viewControllers = [
-            createNavigationController(for: PodcastsSearchController(), title: "Search", image: #imageLiteral(resourceName: "search")),
+            createNavigationController(for: PodcastsTableViewController(), title: "Search", image: #imageLiteral(resourceName: "search")),
             createNavigationController(for: favouritesCollectionView, title: "Favourites", image: #imageLiteral(resourceName: "favourite")),
-            createNavigationController(for: DownloadsController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
+            createNavigationController(for: DownloadsTableViewController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
         ]
     }
     
-    fileprivate func setupPlayerDetailView() {
-        print("Setting up PlayerDetailView")
+    func setupPlayerDetailView() {
+        print("setting up PlayerDetailView")
         
         playerDetailView.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(playerDetailView, belowSubview: tabBar)
@@ -101,16 +102,18 @@ extension MainTabBarController {
             maximizedTopAnchorConstraint
         ])
     }
-}
+    
+} // extension MainTabBarController - Setup
 
 // MARK: Helper Functions
-
-extension MainTabBarController {
-    fileprivate func createNavigationController(for rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
+fileprivate extension MainTabBarController {
+    
+    func createNavigationController(for rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
         rootViewController.navigationItem.title = title
         navController.tabBarItem.title = title
         navController.tabBarItem.image = image.withRenderingMode(.alwaysOriginal)
         return navController
     }
-}
+    
+} // extension MainTabBarController - Helpers

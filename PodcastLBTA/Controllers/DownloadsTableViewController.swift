@@ -1,5 +1,5 @@
 //
-//  DownloadsController.swift
+//  DownloadsTableViewController.swift
 //  PodcastLBTA
 //
 //  Created by Jason Ngo on 2018-08-17.
@@ -8,12 +8,14 @@
 
 import UIKit
 
-class DownloadsController: UITableViewController {
+class DownloadsTableViewController: UITableViewController {
     
-    fileprivate let cellId = "cellEpisodeId"
+    fileprivate let downloadsCellId = "downloadsCellId"
+    fileprivate let downloadsCellRowHeight: CGFloat = 134
+    
     var savedEpisodes = UserDefaults.standard.savedEpisodes()
     
-    // MARK: - Lifecycle Functions
+    // MARK: - Life Cycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -23,8 +25,8 @@ class DownloadsController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
-        setupObservers()
+        setupDownloadsTableView()
+        setupDownloadsTableViewObservers()
     }
     
     // MARK: - UITableViewController
@@ -34,19 +36,19 @@ class DownloadsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! EpisodeCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: downloadsCellId, for: indexPath) as! EpisodeCell
         cell.episode = savedEpisodes[indexPath.row]
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 134
+        return downloadsCellRowHeight
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (_, _) in
-            let removedEpisode = self.savedEpisodes.remove(at: indexPath.row)
-            UserDefaults.standard.removeEpisode(episode: removedEpisode)
+            let deletedEpisode = self.savedEpisodes.remove(at: indexPath.row)
+            UserDefaults.standard.removeEpisode(episode: deletedEpisode)
             self.tableView?.reloadData()
         }
         
@@ -56,45 +58,33 @@ class DownloadsController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = self.savedEpisodes[indexPath.row]
         
-        if episode.fileUrl != nil {
-            UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.savedEpisodes)
-        } else {
-            let alertController = UIAlertController(title: "Could not find fileUrl", message: "There was an error downloading the episode would you like to redownload the episode?", preferredStyle: .actionSheet)
-            
-            let downloadAction = UIAlertAction(title: "Download", style: .default) { (_) in
-                APIService.shared.downloadEpisode(episode: episode)
-            }
-            
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
-                print("Cancel action pressed")
-            }
-            
-            alertController.addAction(downloadAction)
-            alertController.addAction(cancelAction)
-            
-            present(alertController, animated: true)
+        guard episode.fileUrl != nil else {
+            displayDownloadErrorMessage(for: episode)
+            return
         }
+        
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.savedEpisodes)
     }
     
 } // Downloads Controller
 
 // MARK: - Setup Functions
-
-private extension DownloadsController {
-    func setupTableView() {
-        let nib = UINib(nibName: "EpisodeCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: cellId)
+private extension DownloadsTableViewController {
+    
+    func setupDownloadsTableView() {
+        let episodeCellNib = UINib(nibName: "EpisodeCell", bundle: nil)
+        tableView.register(episodeCellNib, forCellReuseIdentifier: downloadsCellId)
     }
     
-    func setupObservers() {
+    func setupDownloadsTableViewObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadProgress), name: .downloadProgress, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadComplete), name: .downloadComplete, object: nil)
     }
+    
 }
 
 // MARK: - Selector Functions
-
-private extension DownloadsController {
+private extension DownloadsTableViewController {
     @objc func handleDownloadProgress(notification: Notification) {
         guard
             let userInfo = notification.userInfo,
@@ -123,5 +113,24 @@ private extension DownloadsController {
         
         cell.downloadProgressLabel.isHidden = true
         savedEpisodes[index].fileUrl = fileUrl
+    }
+}
+
+// MARK: - Helper Functions
+fileprivate extension DownloadsTableViewController {
+    func displayDownloadErrorMessage(for episode: Episode) {
+        let alertController = UIAlertController(title: "Could not find fileUrl",
+                                                message: "There was an error downloading the episode would you like to redownload the episode?",
+                                                preferredStyle: .actionSheet)
+        
+        let downloadAction = UIAlertAction(title: "Download", style: .default) { (_) in
+            APIService.shared.downloadEpisode(episode: episode)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alertController.addAction(downloadAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
     }
 }
