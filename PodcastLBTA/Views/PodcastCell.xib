@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,7 +15,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fyZ-lF-RRV">
-                        <rect key="frame" x="0.0" y="8" width="100" height="100"/>
+                        <rect key="frame" x="0.0" y="8.5" width="100" height="100"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="100" id="2Fm-RU-xYF"/>
@@ -68,10 +63,10 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="artistNameLabel" destination="0nC-Wu-fup" id="8jX-f5-9Xg"/>
-                <outlet property="numberEpisodesLabel" destination="aGS-P3-K2N" id="UNA-vn-wY9"/>
-                <outlet property="podcastImageView" destination="fyZ-lF-RRV" id="A1p-eH-dDq"/>
-                <outlet property="trackNameLabel" destination="0Km-Ff-5rt" id="Rgs-qn-RqF"/>
+                <outlet property="artistLabel" destination="0nC-Wu-fup" id="8jX-f5-9Xg"/>
+                <outlet property="numEpisodesLabel" destination="aGS-P3-K2N" id="UNA-vn-wY9"/>
+                <outlet property="thumbnailImageView" destination="fyZ-lF-RRV" id="A1p-eH-dDq"/>
+                <outlet property="trackLabel" destination="0Km-Ff-5rt" id="Rgs-qn-RqF"/>
             </connections>
             <point key="canvasLocation" x="-134.5" y="20.5"/>
         </tableViewCell>

@@ -11,20 +11,20 @@ import SDWebImage
 
 class PodcastCell: UITableViewCell {
     
-    @IBOutlet var podcastImageView: UIImageView!
-    @IBOutlet var trackNameLabel: UILabel!
-    @IBOutlet var artistNameLabel: UILabel!
-    @IBOutlet var numberEpisodesLabel: UILabel!
+    @IBOutlet var thumbnailImageView: UIImageView!
+    @IBOutlet var trackLabel: UILabel!
+    @IBOutlet var artistLabel: UILabel!
+    @IBOutlet var numEpisodesLabel: UILabel!
     
     var podcast: Podcast! {
         didSet {
-            trackNameLabel.text = podcast.trackName
-            artistNameLabel.text = podcast.artistName
-            numberEpisodesLabel.text = "\(podcast.trackCount ?? 0) Episodes "
+            trackLabel.text = podcast.trackName
+            artistLabel.text = podcast.artistName
+            numEpisodesLabel.text = "\(podcast.trackCount ?? 0) Episodes "
             
             print("Loading image with url: \(podcast.artworkUrl600 ?? "")")
             
-            guard let url = URL(string: podcast.artworkUrl600 ?? "") else { return }
+            guard let podcastArtUrl = URL(string: podcast.artworkUrl600 ?? "") else { return }
             
             // Swift way to fetch image
 //            URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -41,8 +41,8 @@ class PodcastCell: UITableViewCell {
 //            }.resume()
             
             // SD image way to fetch image and cache it
-            podcastImageView.sd_setImage(with: url, completed: nil)
-        } // didSet
-    } // podcast
+            thumbnailImageView.sd_setImage(with: podcastArtUrl, completed: nil)
+        }
+    }
     
 } // PodcastCell

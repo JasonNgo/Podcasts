@@ -30,7 +30,7 @@
 		7DBDE664211F69BE0004DD72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DBDE663211F69BE0004DD72 /* Assets.xcassets */; };
 		7DBDE667211F69BE0004DD72 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DBDE665211F69BE0004DD72 /* LaunchScreen.storyboard */; };
 		7DBDE66F211F6BD20004DD72 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE66E211F6BD20004DD72 /* MainTabBarController.swift */; };
-		7DBDE674211F81D70004DD72 /* PodcastsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE673211F81D70004DD72 /* PodcastsTableViewController.swift */; };
+		7DBDE674211F81D70004DD72 /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE673211F81D70004DD72 /* SearchTableViewController.swift */; };
 		7DBDE676211F82010004DD72 /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE675211F82010004DD72 /* Podcast.swift */; };
 /* End PBXBuildFile section */
 
@@ -60,7 +60,7 @@
 		7DBDE666211F69BE0004DD72 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7DBDE668211F69BE0004DD72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7DBDE66E211F6BD20004DD72 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
-		7DBDE673211F81D70004DD72 /* PodcastsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastsTableViewController.swift; sourceTree = "<group>"; };
+		7DBDE673211F81D70004DD72 /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		7DBDE675211F82010004DD72 /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
 		B6864E1E27F48C36483DD0A4 /* Pods-PodcastLBTA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastLBTA.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PodcastLBTA/Pods-PodcastLBTA.debug.xcconfig"; sourceTree = "<group>"; };
 		C756CA586AA4392AE0D6E9D2 /* Pods-PodcastLBTA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastLBTA.release.xcconfig"; path = "Pods/Target Support Files/Pods-PodcastLBTA/Pods-PodcastLBTA.release.xcconfig"; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				7DBDE66E211F6BD20004DD72 /* MainTabBarController.swift */,
-				7DBDE673211F81D70004DD72 /* PodcastsTableViewController.swift */,
+				7DBDE673211F81D70004DD72 /* SearchTableViewController.swift */,
 				7D2ECC42211FD28500E8C580 /* EpisodesTableViewController.swift */,
 				7D390F332125BC3600E5FE4C /* FavouritesCollectionViewController.swift */,
 				7D390F39212694B600E5FE4C /* DownloadsTableViewController.swift */,
@@ -311,7 +311,7 @@
 			files = (
 				7D390F3221249B9900E5FE4C /* UIApplication.swift in Sources */,
 				7D4FFA0B212211E700BB9620 /* RSSFeed.swift in Sources */,
-				7DBDE674211F81D70004DD72 /* PodcastsTableViewController.swift in Sources */,
+				7DBDE674211F81D70004DD72 /* SearchTableViewController.swift in Sources */,
 				7D4FFA0F2122192F00BB9620 /* PlayerDetailView.swift in Sources */,
 				7D54166B2123BB7800D4C852 /* PlayerDetailView+Gestures.swift in Sources */,
 				7D390F342125BC3600E5FE4C /* FavouritesCollectionViewController.swift in Sources */,

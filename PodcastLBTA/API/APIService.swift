@@ -19,7 +19,7 @@ class APIService {
     
     static let shared = APIService()
     
-    struct SearchResult: Decodable {
+    struct PodcastsSearchResult: Decodable {
         var resultCount: Int?
         var results: [Podcast]?
     }
@@ -39,7 +39,7 @@ class APIService {
             guard let data = dataResponse.data else { return }
             
             do {
-                let searchResult = try JSONDecoder().decode(SearchResult.self, from: data)
+                let searchResult = try JSONDecoder().decode(PodcastsSearchResult.self, from: data)
                 guard let searchResultPodcasts = searchResult.results else { return }
                 completionHandler(searchResultPodcasts)
             } catch let err {
@@ -55,7 +55,6 @@ class APIService {
         
         DispatchQueue.global(qos: .background).async {
             let parser = FeedParser(URL: url)
-            
             parser.parseAsync { (result) in
                 guard let feed = result.rssFeed, result.isSuccess else {
                     print("There was an error attempting to parse the RSS feed: \(result.error?.description ?? "")")
@@ -64,9 +63,9 @@ class APIService {
                 
                 let episodes = feed.toEpisodes()
                 completionHandler(episodes)
-            } // parseAsync
+            }
         }
-    } // fetchEpisodesFrom(feedUrl:completionHandler:)
+    }
     
     func downloadEpisode(episode: Episode) {
         print("Attempting to download episode with streamUrl: \(episode.streamUrl)")

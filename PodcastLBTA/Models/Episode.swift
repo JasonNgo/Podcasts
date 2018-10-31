@@ -9,15 +9,16 @@
 import Foundation
 import FeedKit
 
-struct Episode: Equatable, Codable {
+struct Episode: Codable {
+    
     let title: String
     let author: String
     let pubDate: Date
     let description: String
     
     var imageUrl: String?
-    let streamUrl: String
     var fileUrl: String?
+    let streamUrl: String
     
     init(feedItem: RSSFeedItem) {
         self.title = feedItem.title ?? ""
@@ -27,9 +28,11 @@ struct Episode: Equatable, Codable {
         self.imageUrl = feedItem.iTunes?.iTunesImage?.attributes?.href
         self.streamUrl = feedItem.enclosure?.attributes?.url ?? ""
     }
-    
+
+} // Episode
+
+extension Episode: Equatable {
     static func == (lhs: Episode, rhs: Episode) -> Bool {
         return lhs.title == rhs.title && lhs.author == rhs.author
     }
-    
-} // Episode
+}

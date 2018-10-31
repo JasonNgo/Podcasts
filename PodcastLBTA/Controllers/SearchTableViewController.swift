@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class PodcastsTableViewController: UITableViewController {
+class SearchTableViewController: UITableViewController {
     
     // constants
     fileprivate let podcastCellId = "podcastCell"
@@ -67,7 +67,7 @@ class PodcastsTableViewController: UITableViewController {
 
 // MARK: - Setup Functions
 
-fileprivate extension PodcastsTableViewController {
+fileprivate extension SearchTableViewController {
     
     func setupPodcastSearchController() {
         self.definesPresentationContext = true
@@ -86,7 +86,7 @@ fileprivate extension PodcastsTableViewController {
 }
 
 // MARK: - UISearchBarDelegate
-extension PodcastsTableViewController: UISearchBarDelegate {
+extension SearchTableViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         

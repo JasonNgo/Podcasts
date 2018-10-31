@@ -9,6 +9,7 @@
 import Foundation
 
 class Podcast: NSObject, Decodable, NSCoding {
+    
     var trackName: String?
     var artistName: String?
     var artworkUrl600: String?
@@ -35,4 +36,5 @@ class Podcast: NSObject, Decodable, NSCoding {
         self.artworkUrl600 = aDecoder.decodeObject(forKey: PodcastCodingKey.artworkUrl.rawValue) as? String
         self.feedUrl = aDecoder.decodeObject(forKey: PodcastCodingKey.feedUrl.rawValue) as? String
     }
+    
 }

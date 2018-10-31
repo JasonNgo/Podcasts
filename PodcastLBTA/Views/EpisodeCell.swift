@@ -11,7 +11,7 @@ import SDWebImage
 
 class EpisodeCell: UITableViewCell {
     
-    @IBOutlet var episodeImageView: UIImageView!
+    @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var publicationDateLabel: UILabel!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var descriptionLabel: UILabel!
@@ -32,8 +32,8 @@ class EpisodeCell: UITableViewCell {
             guard let unwrappedImageUrl = episode.imageUrl else { return }
             guard let url = URL(string: unwrappedImageUrl.toSecureHTTPS()) else { return }
             
-            episodeImageView.sd_setImage(with: url, completed: nil)
-        } // didSet
-    } // episode
+            thumbnailImageView.sd_setImage(with: url, completed: nil)
+        }
+    }
     
 } // EpisodeCell

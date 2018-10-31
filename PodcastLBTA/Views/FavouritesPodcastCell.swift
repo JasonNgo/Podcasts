@@ -10,7 +10,7 @@ import UIKit
 
 class FavouritesPodcastCell: UICollectionViewCell {
     
-    let favouritePodcastsImageView = UIImageView()
+    let thumbnailImageView = UIImageView()
     let titleLabel = UILabel()
     let authorLabel = UILabel()
     
@@ -20,24 +20,28 @@ class FavouritesPodcastCell: UICollectionViewCell {
             authorLabel.text = podcast.artistName
             
             guard let imageUrl = URL(string: podcast.artworkUrl600 ?? "") else { return }
-            favouritePodcastsImageView.sd_setImage(with: imageUrl, completed: nil)
+            thumbnailImageView.sd_setImage(with: imageUrl, completed: nil)
         }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setupUIStyling()
-        setupViews()
+        setupFavouriteCellStyling()
+        setupFavouriteCellViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+}
+
+// MARK: - Setup helper functions
+
+fileprivate extension FavouritesPodcastCell {
     
-    // MARK: - Setup functions
-    
-    fileprivate func setupUIStyling() {
+    func setupFavouriteCellStyling() {
         titleLabel.text = "Podcast Title"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         
@@ -46,11 +50,11 @@ class FavouritesPodcastCell: UICollectionViewCell {
         authorLabel.textColor = .lightGray
     }
     
-    fileprivate func setupViews() {
-        favouritePodcastsImageView.backgroundColor = .red
-        favouritePodcastsImageView.heightAnchor.constraint(equalTo: favouritePodcastsImageView.widthAnchor).isActive = true
+    func setupFavouriteCellViews() {
+        thumbnailImageView.backgroundColor = .red
+        thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor).isActive = true
         
-        let stackView = UIStackView(arrangedSubviews: [favouritePodcastsImageView, titleLabel, authorLabel])
+        let stackView = UIStackView(arrangedSubviews: [thumbnailImageView, titleLabel, authorLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         
@@ -61,4 +65,5 @@ class FavouritesPodcastCell: UICollectionViewCell {
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         stackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
+    
 }

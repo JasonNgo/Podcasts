@@ -19,6 +19,7 @@ class MainTabBarController: UITabBarController {
     let playerDetailView = PlayerDetailView.initFromNib()
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMainTabBarControllerStyle()
@@ -27,6 +28,7 @@ class MainTabBarController: UITabBarController {
     }
     
     // MARK: - Floating Player
+    
     func maximizePlayerDetails(episode: Episode?, playlistEpisodes: [Episode] = []) {
         minimizedTopAnchorConstraint.isActive = false
         maximizedTopAnchorConstraint.isActive = true
@@ -64,6 +66,7 @@ class MainTabBarController: UITabBarController {
 } // MainTabBarController
 
 // MARK: - Setup Functions
+
 fileprivate extension MainTabBarController {
     
     func setupMainTabBarControllerStyle() {
@@ -77,7 +80,7 @@ fileprivate extension MainTabBarController {
         let favouritesCollectionView = FavouritesCollectionViewController(collectionViewLayout: collectionViewLayout)
         
         viewControllers = [
-            createNavigationController(for: PodcastsTableViewController(), title: "Search", image: #imageLiteral(resourceName: "search")),
+            createNavigationController(for: SearchTableViewController(), title: "Search", image: #imageLiteral(resourceName: "search")),
             createNavigationController(for: favouritesCollectionView, title: "Favourites", image: #imageLiteral(resourceName: "favourite")),
             createNavigationController(for: DownloadsTableViewController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
         ]
@@ -106,6 +109,7 @@ fileprivate extension MainTabBarController {
 } // extension MainTabBarController - Setup
 
 // MARK: Helper Functions
+
 fileprivate extension MainTabBarController {
     
     func createNavigationController(for rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {

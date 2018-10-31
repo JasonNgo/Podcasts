@@ -9,6 +9,7 @@
 import Foundation
 
 extension UserDefaults {
+    
     static let favouritePodcastsKey = "favouritePodcastsKey"
     static let savedEpisodesKey = "savedEpisodesKey"
     
