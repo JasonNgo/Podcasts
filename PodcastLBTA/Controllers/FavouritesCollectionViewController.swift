@@ -31,9 +31,33 @@
 import Foundation
 import UIKit
 
+private class FavouritesHeaderView: UICollectionViewCell {
+  
+  let headerLabel: UILabel = {
+    let label = UILabel()
+    label.text = "No results. Please favourite a podcast."
+    label.textAlignment = .center
+    label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+    return label
+  }()
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    
+    addSubview(headerLabel)
+    headerLabel.translatesAutoresizingMaskIntoConstraints = false
+    headerLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+    headerLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    headerLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+  }
+  
+}
+
 class FavouritesCollectionViewController: UICollectionViewController {
   
   // constants
+  fileprivate let headerId = "headerId"
+  
   fileprivate let sizeOfColumnSeparator: CGFloat = 16
   fileprivate let numberOfColumnSeparators: CGFloat = 3
   fileprivate let numberOfFavouriteCellsToDisplay: CGFloat = 2
@@ -67,6 +91,7 @@ class FavouritesCollectionViewController: UICollectionViewController {
   fileprivate func setupFavouritesCollectionView() {
     collectionView?.backgroundColor = .white
     collectionView?.register(FavouritesPodcastCell.self, forCellWithReuseIdentifier: FavouritesPodcastCell.reuseIdentifier)
+    collectionView?.register(FavouritesHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
     
     let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture))
     collectionView?.addGestureRecognizer(longPressGesture)
@@ -114,6 +139,25 @@ extension FavouritesCollectionViewController {
     let episodesViewController = EpisodesTableViewController()
     episodesViewController.podcast = podcast
     navigationController?.pushViewController(episodesViewController, animated: true)
+  }
+  
+  override func collectionView(_ collectionView: UICollectionView,
+                               viewForSupplementaryElementOfKind kind: String,
+                               at indexPath: IndexPath) -> UICollectionReusableView {
+    let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier:
+      headerId, for: indexPath) as! FavouritesHeaderView
+    header.layoutSubviews()
+    return header
+  }
+  
+  func collectionView(_ collectionView: UICollectionView,
+                               layout collectionViewLayout: UICollectionViewLayout,
+                               referenceSizeForHeaderInSection section: Int) -> CGSize {
+    if podcasts.isEmpty {
+      return CGSize(width: collectionView.frame.width, height: 200)
+    } else {
+      return CGSize(width: 0, height: 0)
+    }
   }
   
 }

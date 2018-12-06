@@ -53,6 +53,7 @@ class DownloadsTableViewController: UITableViewController {
   fileprivate func setupDownloadsTableView() {
     let episodeCellNib = EpisodeCell.initFromNib()
     tableView.register(episodeCellNib, forCellReuseIdentifier: EpisodeCell.reuseIdentifier)
+    tableView.tableFooterView = UIView()
   }
   
   fileprivate func setupDownloadsTableViewObservers() {
@@ -151,6 +152,18 @@ extension DownloadsTableViewController {
     }
     
     UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: savedEpisodes)
+  }
+  
+  override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    let noResultsLabel = UILabel()
+    noResultsLabel.text = "No results. Please download a podcast"
+    noResultsLabel.textAlignment = .center
+    noResultsLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+    return noResultsLabel
+  }
+  
+  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return savedEpisodes.count > 0 ? 0 : 250
   }
   
 }

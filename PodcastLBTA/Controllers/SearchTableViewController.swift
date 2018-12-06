@@ -76,7 +76,7 @@ extension SearchTableViewController {
   }
   
   override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return self.podcasts.count > 0 ? 0 : 250
+    return podcasts.count > 0 ? 0 : 250
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
