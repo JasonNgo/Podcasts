@@ -128,15 +128,15 @@
 		7DBDE65B211F69BD0004DD72 /* PodcastLBTA */ = {
 			isa = PBXGroup;
 			children = (
-				7DBDE665211F69BE0004DD72 /* LaunchScreen.storyboard */,
-				7DBDE663211F69BE0004DD72 /* Assets.xcassets */,
-				7DBDE668211F69BE0004DD72 /* Info.plist */,
-				7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */,
 				7D4FFA0721220F2D00BB9620 /* Extensions */,
 				7D2ECC3B211FBAB800E8C580 /* API */,
 				7DBDE672211F81A50004DD72 /* Models */,
 				7DBDE671211F81A00004DD72 /* Views */,
 				7DBDE670211F819B0004DD72 /* Controllers */,
+				7DBDE665211F69BE0004DD72 /* LaunchScreen.storyboard */,
+				7DBDE663211F69BE0004DD72 /* Assets.xcassets */,
+				7DBDE668211F69BE0004DD72 /* Info.plist */,
+				7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */,
 			);
 			path = PodcastLBTA;
 			sourceTree = "<group>";
@@ -160,10 +160,10 @@
 				7D2ECC3E211FBF6400E8C580 /* PodcastCell.xib */,
 				7D4FFA032122042500BB9620 /* EpisodeCell.swift */,
 				7D4FFA042122042500BB9620 /* EpisodeCell.xib */,
+				7D390F352125C04500E5FE4C /* FavouritesPodcastCell.swift */,
 				7D4FFA0E2122192F00BB9620 /* PlayerDetailView.swift */,
 				7D54166A2123BB7800D4C852 /* PlayerDetailView+Gestures.swift */,
 				7D4FFA0C2122170400BB9620 /* PlayerDetailView.xib */,
-				7D390F352125C04500E5FE4C /* FavouritesPodcastCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

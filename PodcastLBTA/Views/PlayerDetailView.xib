@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -219,7 +218,6 @@
                             </constraints>
                         </stackView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </stackView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -233,6 +231,11 @@
                 <constraint firstItem="OIw-4R-K5s" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="jhE-8q-knc"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="OIw-4R-K5s"/>
+                </mask>
+            </variation>
             <connections>
                 <outlet property="authorLabel" destination="Yfg-6I-8Mr" id="hvt-wq-x0P"/>
                 <outlet property="currentTimeLabel" destination="HCC-5n-EDs" id="QEK-Md-9zU"/>
@@ -249,14 +252,14 @@
                 <outlet property="playPauseButton" destination="e5W-1W-Err" id="NWl-V6-WM0"/>
                 <outlet property="titleLabel" destination="4Rc-PE-pFQ" id="VJt-sb-qYV"/>
             </connections>
-            <point key="canvasLocation" x="485" y="131"/>
+            <point key="canvasLocation" x="365" y="73"/>
         </view>
     </objects>
     <resources>
-        <image name="audio" width="50" height="50"/>
-        <image name="forward" width="50" height="50"/>
-        <image name="no-audio" width="50" height="50"/>
-        <image name="play" width="50" height="50"/>
-        <image name="rewind" width="50" height="50"/>
+        <image name="audio" width="37.5" height="37.5"/>
+        <image name="forward" width="37.5" height="37.5"/>
+        <image name="no-audio" width="37.5" height="37.5"/>
+        <image name="play" width="37.5" height="37.5"/>
+        <image name="rewind" width="37.5" height="37.5"/>
     </resources>
 </document>
