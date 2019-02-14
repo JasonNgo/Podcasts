@@ -43,7 +43,10 @@ extension SearchTableViewDataSource: UITableViewDataSource {
             fatalError("Error attempting to cast PodcastCell")
         }
         
-        cell.podcast = podcasts[indexPath.row]
+        let podcast = podcasts[indexPath.row]
+        let viewModel = PodcastCellViewModel(podcast: podcast)
+        cell.configureCell(with: viewModel)
+        
         return cell
     }
 }

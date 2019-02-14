@@ -36,6 +36,7 @@
 		7DD6B9702215D4040036A91B /* SearchTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B96F2215D4040036A91B /* SearchTableViewDataSource.swift */; };
 		7DD6B9722215D4880036A91B /* SearchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B9712215D4880036A91B /* SearchCoordinator.swift */; };
 		7DD6B9742215DD9B0036A91B /* FavouritesCoodinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B9732215DD9B0036A91B /* FavouritesCoodinator.swift */; };
+		7DD6B979221600780036A91B /* PodcastCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B978221600780036A91B /* PodcastCellViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		7DD6B96F2215D4040036A91B /* SearchTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewDataSource.swift; sourceTree = "<group>"; };
 		7DD6B9712215D4880036A91B /* SearchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCoordinator.swift; sourceTree = "<group>"; };
 		7DD6B9732215DD9B0036A91B /* FavouritesCoodinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesCoodinator.swift; sourceTree = "<group>"; };
+		7DD6B978221600780036A91B /* PodcastCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastCellViewModel.swift; sourceTree = "<group>"; };
 		B6864E1E27F48C36483DD0A4 /* Pods-PodcastLBTA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastLBTA.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PodcastLBTA/Pods-PodcastLBTA.debug.xcconfig"; sourceTree = "<group>"; };
 		C756CA586AA4392AE0D6E9D2 /* Pods-PodcastLBTA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastLBTA.release.xcconfig"; path = "Pods/Target Support Files/Pods-PodcastLBTA/Pods-PodcastLBTA.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -229,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				7DBDE675211F82010004DD72 /* Podcast.swift */,
+				7DD6B978221600780036A91B /* PodcastCellViewModel.swift */,
 				7D2ECC40211FC1D100E8C580 /* PodcastCell.swift */,
 				7D2ECC3E211FBF6400E8C580 /* PodcastCell.xib */,
 			);
@@ -384,6 +387,7 @@
 				7D4FFA0F2122192F00BB9620 /* PlayerDetailView.swift in Sources */,
 				7D54166B2123BB7800D4C852 /* PlayerDetailView+Gestures.swift in Sources */,
 				7D390F342125BC3600E5FE4C /* FavouritesCollectionViewController.swift in Sources */,
+				7DD6B979221600780036A91B /* PodcastCellViewModel.swift in Sources */,
 				7D4FFA0921220F3700BB9620 /* String+Extensions.swift in Sources */,
 				7D4FFA1121234B4700BB9620 /* CMTime+Extensions.swift in Sources */,
 				7DD6B9702215D4040036A91B /* SearchTableViewDataSource.swift in Sources */,

@@ -32,26 +32,24 @@ import UIKit
 import SDWebImage
 
 class PodcastCell: UITableViewCell {
-  
-  @IBOutlet var thumbnailImageView: UIImageView!
-  @IBOutlet var trackLabel: UILabel!
-  @IBOutlet var artistLabel: UILabel!
-  @IBOutlet var numEpisodesLabel: UILabel!
-  
-  static func initFromNib() -> UINib {
-    return UINib(nibName: "PodcastCell", bundle: nil)
-  }
-  
-  var podcast: Podcast! {
-    didSet {
-      trackLabel.text = podcast.trackName
-      artistLabel.text = podcast.artistName
-      numEpisodesLabel.text = "\(podcast.trackCount ?? 0) Episodes "
-      
-      print("Loading image with url: \(podcast.artworkUrl600 ?? "")")
-      guard let podcastArtUrl = URL(string: podcast.artworkUrl600 ?? "") else { return }
-      thumbnailImageView.sd_setImage(with: podcastArtUrl, completed: nil)
+    // MARK: - Subviews
+    @IBOutlet var thumbnailImageView: UIImageView!
+    @IBOutlet var trackLabel: UILabel!
+    @IBOutlet var artistLabel: UILabel!
+    @IBOutlet var numEpisodesLabel: UILabel!
+    
+    static func initFromNib() -> UINib {
+        return UINib(nibName: "PodcastCell", bundle: nil)
     }
-  }
-  
-} // PodcastCell
+    
+    // MARK: - Configuration
+    
+    func configureCell(with viewModel: PodcastCellViewModel) {
+        trackLabel.text = viewModel.trackNameText
+        artistLabel.text = viewModel.artistNameText
+        numEpisodesLabel.text = "\(viewModel.numberOfEpisodesText) Episodes "
+        
+        guard let url = viewModel.thumnailUrl else { return }
+        thumbnailImageView.sd_setImage(with: url, completed: nil)
+    }
+}
