@@ -21,20 +21,17 @@
  ***/
 
 //
-//  UIApplication.swift
+//  String.swift
 //  PodcastLBTA
 //
-//  Created by Jason Ngo on 2018-08-15.
+//  Created by Jason Ngo on 2018-08-13.
 //  Copyright © 2018 Jason Ngo. All rights reserved.
 //
 
 import Foundation
-import UIKit
 
-extension UIApplication {
-  
-  static func mainTabBarController() -> MainTabBarController? {
-    return shared.keyWindow?.rootViewController as? MainTabBarController
-  }
-  
+extension String {
+    func toSecureHTTPS() -> String {
+        return self.contains("https") ? self : self.replacingOccurrences(of: "http", with: "https")
+    }
 }

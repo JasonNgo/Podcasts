@@ -38,9 +38,6 @@ class PodcastCell: UITableViewCell {
   @IBOutlet var artistLabel: UILabel!
   @IBOutlet var numEpisodesLabel: UILabel!
   
-  static let reuseIdentifier = "podcastCell"
-  static let cellHeight: CGFloat = 116
-  
   static func initFromNib() -> UINib {
     return UINib(nibName: "PodcastCell", bundle: nil)
   }

@@ -21,7 +21,7 @@
  ***/
 
 //
-//  String.swift
+//  RSSFeed.swift
 //  PodcastLBTA
 //
 //  Created by Jason Ngo on 2018-08-13.
@@ -29,11 +29,24 @@
 //
 
 import Foundation
+import FeedKit
 
-extension String {
-  
-  func toSecureHTTPS() -> String {
-    return self.contains("https") ? self : self.replacingOccurrences(of: "http", with: "https")
-  }
-  
+extension RSSFeed {
+    func toEpisodes() -> [Episode] {
+        let podcastImageUrl = iTunes?.iTunesImage?.attributes?.href
+        
+        var episodes = [Episode]()
+        
+        items?.forEach({ (feedItem) in
+            var episodeToAppend = Episode(feedItem: feedItem)
+            
+            if episodeToAppend.imageUrl == nil {
+                episodeToAppend.imageUrl = podcastImageUrl
+            }
+            
+            episodes.append(episodeToAppend)
+        })
+        
+        return episodes
+    }
 }

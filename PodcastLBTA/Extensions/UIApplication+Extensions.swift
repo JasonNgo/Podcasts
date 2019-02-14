@@ -21,34 +21,18 @@
  ***/
 
 //
-//  RSSFeed.swift
+//  UIApplication.swift
 //  PodcastLBTA
 //
-//  Created by Jason Ngo on 2018-08-13.
+//  Created by Jason Ngo on 2018-08-15.
 //  Copyright © 2018 Jason Ngo. All rights reserved.
 //
 
 import Foundation
-import FeedKit
+import UIKit
 
-extension RSSFeed {
-  
-  func toEpisodes() -> [Episode] {
-    let podcastImageUrl = iTunes?.iTunesImage?.attributes?.href
-    
-    var episodes = [Episode]()
-    
-    items?.forEach({ (feedItem) in
-      var episodeToAppend = Episode(feedItem: feedItem)
-      
-      if episodeToAppend.imageUrl == nil {
-        episodeToAppend.imageUrl = podcastImageUrl
-      }
-      
-      episodes.append(episodeToAppend)
-    })
-    
-    return episodes
-  }
-  
+extension UIApplication {
+    static func mainTabBarController() -> MainTabBarController? {
+        return shared.keyWindow?.rootViewController as? MainTabBarController
+    }
 }

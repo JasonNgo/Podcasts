@@ -32,17 +32,15 @@ import Foundation
 import AVKit
 
 extension CMTime {
-  
-  func toDisplayString() -> String {
-    guard CMTimeGetSeconds(self).isNormal else { return "--:--" }
-    
-    let totalSeconds = Int(CMTimeGetSeconds(self))
-    let seconds = totalSeconds % 60
-    let minutes = totalSeconds / 60
-    let hours = totalSeconds / 3600
-    
-    let timeFormatString = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-    return timeFormatString
-  }
-  
+    func toDisplayString() -> String {
+        guard CMTimeGetSeconds(self).isNormal else { return "--:--" }
+        
+        let totalSeconds = Int(CMTimeGetSeconds(self))
+        let seconds = totalSeconds % 60
+        let minutes = totalSeconds / 60
+        let hours = totalSeconds / 3600
+        
+        let timeFormatString = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        return timeFormatString
+    }
 }
