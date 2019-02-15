@@ -11,7 +11,8 @@ import UIKit
 class SearchCoordinator: Coordinator {
     // MARK: - Dependencies
     private let dataSource: SearchTableViewDataSource
-    private(set) var navigationController: UINavigationController
+    
+    let navigationController: UINavigationController
     private var searchController: SearchTableViewController?
     
     // MARK: - Child coordinators

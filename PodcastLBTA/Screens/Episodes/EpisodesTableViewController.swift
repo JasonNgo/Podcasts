@@ -31,7 +31,6 @@
 import UIKit
 
 class EpisodesTableViewController: UITableViewController, Deinitcallable {
-    
     // MARK: - Dependencies
     private let dataSource: EpisodesTableViewDataSource
     
@@ -102,7 +101,7 @@ class EpisodesTableViewController: UITableViewController, Deinitcallable {
     
     private func fetchEpisodes() {
         dataSource.fetchEpisodes { (error) in
-            if let error = error {
+            if let _ = error {
                 // TODO: error state
                 return
             }

@@ -42,11 +42,17 @@ class MainTabBarController: UITabBarController {
     private let searchDataSource: SearchTableViewDataSource
     private var searchCoordinator: SearchCoordinator?
     
+    private let favouritesDataSource: FavouritesCollectionViewDataSource
+    private var favouritesCoordinator: FavouritesCoordinator?
+    
     // MARK: - Initializer
     
     init() {
         self.searchDataSource = SearchTableViewDataSource()
         self.searchCoordinator = SearchCoordinator(navigationController: UINavigationController(), dataSource: searchDataSource)
+        
+        self.favouritesDataSource = FavouritesCollectionViewDataSource()
+        self.favouritesCoordinator = FavouritesCoordinator(navigationController: UINavigationController(), dataSource: favouritesDataSource)
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,6 +67,14 @@ class MainTabBarController: UITabBarController {
         super.viewDidLoad()
         
         searchCoordinator?.start()
+        searchCoordinator?.stop = { [weak self] in
+            self?.searchCoordinator = nil
+        }
+        
+        favouritesCoordinator?.start()
+        favouritesCoordinator?.stop = { [weak self] in
+            self?.favouritesCoordinator = nil
+        }
         
         setupMainTabBarControllerStyle()
         setupMainTabBarControllers()
@@ -131,19 +145,16 @@ class MainTabBarController: UITabBarController {
     }
     
     fileprivate func setupMainTabBarControllers() {
-        let collectionViewLayout = UICollectionViewFlowLayout()
-        
         guard
-            let searchCoordinatorNavController = searchCoordinator?.navigationController
+            let searchNavController = searchCoordinator?.navigationController,
+            let favouritesNavController = favouritesCoordinator?.navigationController
         else {
             return
         }
         
-//        let favouritesCollectionView = FavouritesCollectionViewController(collectionViewLayout: collectionViewLayout)
-        
         viewControllers = [
-            searchCoordinatorNavController
-//            createNavigationController(for: favouritesCollectionView, title: "Favourites", image: #imageLiteral(resourceName: "favourite")),
+            searchNavController,
+            favouritesNavController
 //            createNavigationController(for: DownloadsTableViewController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
         ]
     }

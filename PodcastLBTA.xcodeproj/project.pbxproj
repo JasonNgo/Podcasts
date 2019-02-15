@@ -15,7 +15,7 @@
 		7D2FB2722120BA9800CDFDA4 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FB2712120BA9800CDFDA4 /* Episode.swift */; };
 		7D390F3221249B9900E5FE4C /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F3121249B9900E5FE4C /* UIApplication+Extensions.swift */; };
 		7D390F342125BC3600E5FE4C /* FavouritesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F332125BC3600E5FE4C /* FavouritesCollectionViewController.swift */; };
-		7D390F362125C04500E5FE4C /* FavouritesPodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F352125C04500E5FE4C /* FavouritesPodcastCell.swift */; };
+		7D390F362125C04500E5FE4C /* FavouritePodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F352125C04500E5FE4C /* FavouritePodcastCell.swift */; };
 		7D390F382126194200E5FE4C /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F372126194200E5FE4C /* UserDefaults+Extensions.swift */; };
 		7D390F3A212694B600E5FE4C /* DownloadsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F39212694B600E5FE4C /* DownloadsTableViewController.swift */; };
 		7D4FFA052122042500BB9620 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FFA032122042500BB9620 /* EpisodeCell.swift */; };
@@ -41,6 +41,9 @@
 		7DD6B97E221623760036A91B /* EpisodesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B97D221623760036A91B /* EpisodesCoordinator.swift */; };
 		7DD6B9802216244B0036A91B /* EpisodesTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B97F2216244B0036A91B /* EpisodesTableViewDataSource.swift */; };
 		7DD6B982221720930036A91B /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B981221720920036A91B /* UIView+Extensions.swift */; };
+		7DD6B984221747E80036A91B /* FavouritesHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B983221747E80036A91B /* FavouritesHeaderView.swift */; };
+		7DD6B9862217482C0036A91B /* FavouritesCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B9852217482C0036A91B /* FavouritesCollectionViewDataSource.swift */; };
+		7DD6B988221749D50036A91B /* FavouriteCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD6B987221749D50036A91B /* FavouriteCellViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,7 +55,7 @@
 		7D2FB2712120BA9800CDFDA4 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
 		7D390F3121249B9900E5FE4C /* UIApplication+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extensions.swift"; sourceTree = "<group>"; };
 		7D390F332125BC3600E5FE4C /* FavouritesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesCollectionViewController.swift; sourceTree = "<group>"; };
-		7D390F352125C04500E5FE4C /* FavouritesPodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPodcastCell.swift; sourceTree = "<group>"; };
+		7D390F352125C04500E5FE4C /* FavouritePodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritePodcastCell.swift; sourceTree = "<group>"; };
 		7D390F372126194200E5FE4C /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		7D390F39212694B600E5FE4C /* DownloadsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsTableViewController.swift; sourceTree = "<group>"; };
 		7D4FFA032122042500BB9620 /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
@@ -80,6 +83,9 @@
 		7DD6B97D221623760036A91B /* EpisodesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesCoordinator.swift; sourceTree = "<group>"; };
 		7DD6B97F2216244B0036A91B /* EpisodesTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesTableViewDataSource.swift; sourceTree = "<group>"; };
 		7DD6B981221720920036A91B /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		7DD6B983221747E80036A91B /* FavouritesHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesHeaderView.swift; sourceTree = "<group>"; };
+		7DD6B9852217482C0036A91B /* FavouritesCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesCollectionViewDataSource.swift; sourceTree = "<group>"; };
+		7DD6B987221749D50036A91B /* FavouriteCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteCellViewModel.swift; sourceTree = "<group>"; };
 		B6864E1E27F48C36483DD0A4 /* Pods-PodcastLBTA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastLBTA.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PodcastLBTA/Pods-PodcastLBTA.debug.xcconfig"; sourceTree = "<group>"; };
 		C756CA586AA4392AE0D6E9D2 /* Pods-PodcastLBTA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastLBTA.release.xcconfig"; path = "Pods/Target Support Files/Pods-PodcastLBTA/Pods-PodcastLBTA.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				7DD6B9772215FD4C0036A91B /* Episode */,
+				7DD6B989221765350036A91B /* Favourite */,
 				7DD6B9762215FD440036A91B /* Podcast */,
 				7DD6B97C22160D200036A91B /* Main */,
 				7D819CA32211E34A00694974 /* Downloads */,
@@ -153,9 +160,10 @@
 		7D819CA12211E33600694974 /* Favourites */ = {
 			isa = PBXGroup;
 			children = (
-				7DD6B9732215DD9B0036A91B /* FavouritesCoodinator.swift */,
 				7D390F332125BC3600E5FE4C /* FavouritesCollectionViewController.swift */,
-				7D390F352125C04500E5FE4C /* FavouritesPodcastCell.swift */,
+				7DD6B9852217482C0036A91B /* FavouritesCollectionViewDataSource.swift */,
+				7DD6B9732215DD9B0036A91B /* FavouritesCoodinator.swift */,
+				7DD6B983221747E80036A91B /* FavouritesHeaderView.swift */,
 			);
 			path = Favourites;
 			sourceTree = "<group>";
@@ -258,6 +266,15 @@
 				7DBDE671211F81A00004DD72 /* PlayerDetailView */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		7DD6B989221765350036A91B /* Favourite */ = {
+			isa = PBXGroup;
+			children = (
+				7DD6B987221749D50036A91B /* FavouriteCellViewModel.swift */,
+				7D390F352125C04500E5FE4C /* FavouritePodcastCell.swift */,
+			);
+			path = Favourite;
 			sourceTree = "<group>";
 		};
 		8145B080F45D08557A61480C /* Frameworks */ = {
@@ -401,13 +418,15 @@
 				7DBDE674211F81D70004DD72 /* SearchTableViewController.swift in Sources */,
 				7D4FFA0F2122192F00BB9620 /* PlayerDetailView.swift in Sources */,
 				7D54166B2123BB7800D4C852 /* PlayerDetailView+Gestures.swift in Sources */,
+				7DD6B9862217482C0036A91B /* FavouritesCollectionViewDataSource.swift in Sources */,
 				7D390F342125BC3600E5FE4C /* FavouritesCollectionViewController.swift in Sources */,
 				7DD6B979221600780036A91B /* PodcastCellViewModel.swift in Sources */,
 				7D4FFA0921220F3700BB9620 /* String+Extensions.swift in Sources */,
 				7D4FFA1121234B4700BB9620 /* CMTime+Extensions.swift in Sources */,
 				7DD6B9702215D4040036A91B /* SearchTableViewDataSource.swift in Sources */,
-				7D390F362125C04500E5FE4C /* FavouritesPodcastCell.swift in Sources */,
+				7D390F362125C04500E5FE4C /* FavouritePodcastCell.swift in Sources */,
 				7DBDE65D211F69BD0004DD72 /* AppDelegate.swift in Sources */,
+				7DD6B984221747E80036A91B /* FavouritesHeaderView.swift in Sources */,
 				7DD6B982221720930036A91B /* UIView+Extensions.swift in Sources */,
 				7D2ECC43211FD28500E8C580 /* EpisodesTableViewController.swift in Sources */,
 				7DD6B9802216244B0036A91B /* EpisodesTableViewDataSource.swift in Sources */,
@@ -418,6 +437,7 @@
 				7D4FFA052122042500BB9620 /* EpisodeCell.swift in Sources */,
 				7D390F3A212694B600E5FE4C /* DownloadsTableViewController.swift in Sources */,
 				7DD6B9742215DD9B0036A91B /* FavouritesCoodinator.swift in Sources */,
+				7DD6B988221749D50036A91B /* FavouriteCellViewModel.swift in Sources */,
 				7D2ECC3D211FBAC800E8C580 /* APIService.swift in Sources */,
 				7DBDE676211F82010004DD72 /* Podcast.swift in Sources */,
 				7D2FB2722120BA9800CDFDA4 /* Episode.swift in Sources */,
