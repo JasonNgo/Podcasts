@@ -11,9 +11,13 @@ import UIKit
 class SearchCoordinator: Coordinator {
     // MARK: - Dependencies
     private let dataSource: SearchTableViewDataSource
+    private(set) var navigationController: UINavigationController
+    private var searchController: SearchTableViewController?
     
-    let navigationController: UINavigationController
-//    private var episodeCoordinator: EpisodeCoordinator?
+    // MARK: - Child coordinators
+    private var episodesCoordinator: EpisodesCoordinator?
+    
+    // MARK: - Initializers
     
     init(navigationController: UINavigationController, dataSource: SearchTableViewDataSource) {
         self.dataSource = dataSource
@@ -22,6 +26,8 @@ class SearchCoordinator: Coordinator {
         
         setupNavigationControllerStyling()
     }
+    
+    // MARK: - Setup
     
     private func setupNavigationControllerStyling() {
         navigationController.navigationBar.prefersLargeTitles = true
@@ -35,11 +41,17 @@ class SearchCoordinator: Coordinator {
         searchController.tabBarItem.image = #imageLiteral(resourceName: "search").withRenderingMode(.alwaysOriginal)
         setDeallocallable(with: searchController)
         navigationController.pushViewController(searchController, animated: false)
+        self.searchController = searchController
     }
 }
 
 extension SearchCoordinator: SearchTableViewDelegate {
-    func searchTableViewDidSelect(item: Podcast) {
-        // print("))
+    func searchTableViewDidSelect(podcast: Podcast) {
+        let episodesCoordinator = EpisodesCoordinator(navigationController: navigationController, podcast: podcast)
+        episodesCoordinator.start()
+        episodesCoordinator.stop = { [weak self] in
+            self?.episodesCoordinator = nil
+        }
+        self.episodesCoordinator = episodesCoordinator
     }
 }

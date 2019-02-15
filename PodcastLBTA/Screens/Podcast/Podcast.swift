@@ -44,13 +44,6 @@ class Podcast: NSObject, Decodable, NSCoding {
         case feedUrl = "podcastCodingFeedUrlKey"
     }
     
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(trackName ?? "", forKey: PodcastCodingKey.title.rawValue)
-        aCoder.encode(artistName ?? "", forKey: PodcastCodingKey.artist.rawValue)
-        aCoder.encode(artworkUrl600 ?? "", forKey: PodcastCodingKey.artworkUrl.rawValue)
-        aCoder.encode(feedUrl ?? "", forKey: PodcastCodingKey.feedUrl.rawValue)
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         self.trackName = aDecoder.decodeObject(forKey: PodcastCodingKey.title.rawValue) as? String
         self.artistName = aDecoder.decodeObject(forKey: PodcastCodingKey.artist.rawValue) as? String
@@ -58,4 +51,10 @@ class Podcast: NSObject, Decodable, NSCoding {
         self.feedUrl = aDecoder.decodeObject(forKey: PodcastCodingKey.feedUrl.rawValue) as? String
     }
     
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(trackName ?? "", forKey: PodcastCodingKey.title.rawValue)
+        aCoder.encode(artistName ?? "", forKey: PodcastCodingKey.artist.rawValue)
+        aCoder.encode(artworkUrl600 ?? "", forKey: PodcastCodingKey.artworkUrl.rawValue)
+        aCoder.encode(feedUrl ?? "", forKey: PodcastCodingKey.feedUrl.rawValue)
+    }
 }

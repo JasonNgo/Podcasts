@@ -29,21 +29,53 @@
 //
 
 import UIKit
+import JGProgressHUD
+
+enum SearchTableViewState {
+    case loading
+    case empty
+    case populated
+    case error(Error)
+}
 
 protocol SearchTableViewDelegate: AnyObject {
-    func searchTableViewDidSelect(item: Podcast)
+    func searchTableViewDidSelect(podcast: Podcast)
 }
+
+// TODO: Use state var to update background view of tableview
 
 class SearchTableViewController: UITableViewController, Deinitcallable {
     // MARK: - Dependencies
     private let dataSource: SearchTableViewDataSource
+
     // MARK: - Configurations
     private let cellHeight: CGFloat = 116
     private let noResultsText = "No results. Please enter a search term"
-    // MARK: - Search
+
     private let podcastsSearchController = UISearchController(searchResultsController: nil)
     
+    private lazy var progressHUD: JGProgressHUD = {
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Searching for podcasts"
+        return hud
+    }()
+    
     weak var delegate: SearchTableViewDelegate?
+    
+    private var state: SearchTableViewState = .empty {
+        didSet {
+            switch state {
+            case .loading:
+                self.progressHUD.show(in: self.view, animated: true)
+            case .populated:
+                self.progressHUD.dismiss()
+            case .empty:
+                self.progressHUD.dismiss()
+            default:
+                break
+            }
+        }
+    }
     
     // MARK: - Life Cycle
     var onDeinit: (() -> Void)?
@@ -76,9 +108,10 @@ class SearchTableViewController: UITableViewController, Deinitcallable {
     }
     
     private func setupPodcastsTableView() {
-        let podcastCellNib = PodcastCell.initFromNib()
+        let podcastCellNib = UINib(nibName: dataSource.reuseId, bundle: nil)
         tableView.register(podcastCellNib, forCellReuseIdentifier: dataSource.reuseId)
         tableView.dataSource = self.dataSource
+        tableView.tableFooterView = UIView()
     }
     
     // MARK: - Required
@@ -108,7 +141,7 @@ extension SearchTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let podcast = dataSource.item(at: indexPath.row) else { return }
-        delegate?.searchTableViewDidSelect(item: podcast)
+        delegate?.searchTableViewDidSelect(podcast: podcast)
     }
 }
 
@@ -118,8 +151,11 @@ extension SearchTableViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         
+        state = .loading
         dataSource.searchItems(with: searchText) { (error) in
             if let _ = error { return }
+            
+            self.state = .populated
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()

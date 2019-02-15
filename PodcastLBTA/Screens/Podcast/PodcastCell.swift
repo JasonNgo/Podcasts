@@ -32,15 +32,10 @@ import UIKit
 import SDWebImage
 
 class PodcastCell: UITableViewCell {
-    // MARK: - Subviews
-    @IBOutlet var thumbnailImageView: UIImageView!
-    @IBOutlet var trackLabel: UILabel!
-    @IBOutlet var artistLabel: UILabel!
-    @IBOutlet var numEpisodesLabel: UILabel!
-    
-    static func initFromNib() -> UINib {
-        return UINib(nibName: "PodcastCell", bundle: nil)
-    }
+    @IBOutlet private var thumbnailImageView: UIImageView!
+    @IBOutlet private var trackLabel: UILabel!
+    @IBOutlet private var artistLabel: UILabel!
+    @IBOutlet private var numEpisodesLabel: UILabel!
     
     // MARK: - Configuration
     

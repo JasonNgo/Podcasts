@@ -8,10 +8,9 @@
 
 import UIKit
 
-
 class SearchTableViewDataSource: NSObject {
     private var podcasts: [Podcast] = []
-    private(set) var reuseId = "podcastCell"
+    private(set) var reuseId = "PodcastCell"
     
     var isEmpty: Bool {
        return podcasts.isEmpty

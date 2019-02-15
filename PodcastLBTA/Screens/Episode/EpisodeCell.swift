@@ -32,43 +32,22 @@ import UIKit
 import SDWebImage
 
 class EpisodeCell: UITableViewCell {
-  
-  // MARK: - Views
-  
-  @IBOutlet var thumbnailImageView: UIImageView!
-  @IBOutlet var publicationDateLabel: UILabel!
-  @IBOutlet var titleLabel: UILabel!
-  @IBOutlet var descriptionLabel: UILabel!
-  @IBOutlet var downloadProgressLabel: UILabel!
-  
-  // MARK: - Static
-  
-  static let reuseIdentifier = "episodeCell"
-  static let cellHeight: CGFloat = 132
-  static func initFromNib() -> UINib {
-    return UINib(nibName: "EpisodeCell", bundle: nil)
-  }
-  
-  let df: DateFormatter = {
-    var dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MMM dd, yyyy"
-    return dateFormatter
-  }()
-  
-  var episode: Episode! {
-    didSet {
-      titleLabel.text = episode.title
-      descriptionLabel.text = episode.description
-      publicationDateLabel.text = df.string(from: episode.pubDate)
-      
-      guard
-        let unwrappedImageUrl = episode.imageUrl,
-        let url = URL(string: unwrappedImageUrl.toSecureHTTPS()) else {
-          return
-      }
-      
-      thumbnailImageView.sd_setImage(with: url, completed: nil)
+    
+    // MARK: - Subviews
+    @IBOutlet var thumbnailImageView: UIImageView!
+    @IBOutlet var publicationDateLabel: UILabel!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var downloadProgressLabel: UILabel!
+    
+    // MARK: - Configuration
+    
+    func configureCell(using viewModel: EpisodeCellViewModel) {
+        titleLabel.text = viewModel.titleText
+        descriptionLabel.text = viewModel.descriptionText
+        publicationDateLabel.text = viewModel.publicationDateText
+        
+        guard let url = viewModel.thumbnailUrl else { return }
+        thumbnailImageView.sd_setImage(with: url, completed: nil)
     }
-  }
-  
-} // EpisodeCell
+}

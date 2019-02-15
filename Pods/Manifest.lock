@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (4.7.3)
   - FeedKit (8.0.0)
+  - JGProgressHUD (2.0.3)
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
@@ -8,19 +9,22 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 4.7)
   - FeedKit (~> 8.0)
+  - JGProgressHUD
   - SDWebImage (~> 4.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - FeedKit
+    - JGProgressHUD
     - SDWebImage
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   FeedKit: 4a78f07adf7f0a224b904014678f1de82a7ffc21
+  JGProgressHUD: 12b20a8f4ffe05258f8635c1ab92816e451f904d
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
 
-PODFILE CHECKSUM: 9507a93b9401b427388247052265cc8f66505aa9
+PODFILE CHECKSUM: c014104ab463fe47eba04b0e413292c3746cdf12
 
 COCOAPODS: 1.5.3
