@@ -29,124 +29,126 @@
 //
 
 import UIKit
-import FeedKit
 
-class EpisodesTableViewController: UITableViewController {
-  
-  var episodes: [Episode] = []
-  
-  var podcast: Podcast? {
-    didSet {
-      navigationItem.title = podcast?.trackName
-      fetchPodcastEpisodes()
-    }
-  }
-  
-  // MARK: - Lifecycle
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupEpisodesTableView()
-    setupEpisodesNavigationBarButtons()
-  }
-  
-  // MARK: - Setup
-  
-  fileprivate func setupEpisodesTableView() {
-    let episodeCellNib = EpisodeCell.initFromNib()
-    tableView.register(episodeCellNib, forCellReuseIdentifier: EpisodeCell.reuseIdentifier)
-    tableView.tableFooterView = UIView()
-  }
-  
-  fileprivate func setupEpisodesNavigationBarButtons() {
-    let savedPodcasts = UserDefaults.standard.savedPodcasts()
+class EpisodesTableViewController: UITableViewController, Deinitcallable {
     
-    let podcastHasBeenFavourited = savedPodcasts.index {
-      $0.trackName == self.podcast?.trackName && $0.artistName == self.podcast?.artistName
+    // MARK: - Dependencies
+    private let dataSource: EpisodesTableViewDataSource
+    
+    // MARK: - Configurations
+    private let cellHeight: CGFloat = 132
+    
+    // MARK: - Lifecycle
+    
+    var onDeinit: (() -> Void)?
+    
+    deinit {
+        onDeinit?()
     }
     
-    if podcastHasBeenFavourited != nil {
-      navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
-    } else {
-      navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites))
+    init(dataSource: EpisodesTableViewDataSource) {
+        self.dataSource = dataSource
+        super.init(nibName: nil, bundle: nil)
     }
-  }
-  
-  // MARK: - Selectors
-  
-  @objc private func handleSaveFavourites() {
-    print("Favourite pressed")
-    guard let podcast = self.podcast else { return }
     
-    var savedPodcasts = UserDefaults.standard.savedPodcasts()
-    savedPodcasts.append(podcast)
-    
-    let savedPodcastsArchiveData = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
-    UserDefaults.standard.set(savedPodcastsArchiveData, forKey: UserDefaults.favouritePodcastsKey)
-    
-    navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart"), style: .plain, target: nil, action: nil)
-    UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
-  }
-  
-  // MARK: - Helpers
-  
-  fileprivate func fetchPodcastEpisodes() {
-    print("attempting to fetch episodes from RSS feed url: \(podcast?.feedUrl ?? "")")
-    
-    guard let unwrappedFeedUrl = podcast?.feedUrl else { return }
-    APIService.shared.fetchEpisodesFrom(feedUrl: unwrappedFeedUrl) { (episodes) in
-      self.episodes = episodes
-      
-      DispatchQueue.main.async {
-        self.tableView.reloadData()
-      }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupEpisodesTableView()
+        setupEpisodesNavigationBarButtons()
+        fetchEpisodes()
     }
-  }
-  
+    
+    // MARK: - Setup
+    
+    private func setupEpisodesTableView() {
+        tableView.dataSource = self.dataSource
+        let episodeCellNib = UINib(nibName: dataSource.reuseId, bundle: nil)
+        tableView.register(episodeCellNib, forCellReuseIdentifier: dataSource.reuseId)
+        tableView.tableFooterView = UIView()
+    }
+    
+    private func setupEpisodesNavigationBarButtons() {
+        navigationItem.title = dataSource.title
+        let savedPodcasts = UserDefaults.standard.savedPodcasts()
+
+        let podcastHasBeenFavourited = savedPodcasts.index {
+            return $0.trackName == dataSource.podcast.trackName &&
+                   $0.artistName == dataSource.podcast.artistName
+        }
+
+        if podcastHasBeenFavourited != nil {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart").withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(handleSaveFavourites))
+        }
+    }
+    
+    // MARK: - Selectors
+    
+    @objc private func handleSaveFavourites() {
+        let podcast = dataSource.podcast
+
+        var savedPodcasts = UserDefaults.standard.savedPodcasts()
+        savedPodcasts.append(podcast)
+
+        let savedPodcastsArchiveData = NSKeyedArchiver.archivedData(withRootObject: savedPodcasts)
+        UserDefaults.standard.set(savedPodcastsArchiveData, forKey: UserDefaults.favouritePodcastsKey)
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart").withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
+        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
+    }
+    
+    // MARK: - Helpers
+    
+    private func fetchEpisodes() {
+        dataSource.fetchEpisodes { (error) in
+            if let error = error {
+                // TODO: error state
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    // MARK: - Required
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 // MARK: - UITableViewDelegate
 
 extension EpisodesTableViewController {
-  
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return episodes.count
-  }
-  
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: EpisodeCell.reuseIdentifier, for: indexPath) as! EpisodeCell
-    cell.episode = episodes[indexPath.row]
-    return cell
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return EpisodeCell.cellHeight
-  }
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let episode = episodes[indexPath.row]
-    UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: episodes)
-  }
-  
-  override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    let activityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
-    activityIndicatorView.color = .darkGray
-    activityIndicatorView.startAnimating()
-    return activityIndicatorView
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    return episodes.isEmpty ? 400 : 0
-  }
-  
-  override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-    let downloadAction = UITableViewRowAction(style: .normal, title: "Download") { (_, _) in
-      let episode = self.episodes[indexPath.row]
-      UserDefaults.standard.saveEpisode(episode: episode)
-      APIService.shared.downloadEpisode(episode: episode)
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return cellHeight
     }
     
-    return [downloadAction]
-  }
-  
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let episode = dataSource.item(at: indexPath.row) else { return }
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: dataSource.episodes)
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let activityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicatorView.color = .darkGray
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return dataSource.isEmpty ? 400 : 0
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let downloadAction = UITableViewRowAction(style: .normal, title: "Download") { (_, _) in
+            guard let episode = self.dataSource.item(at: indexPath.row) else { return }
+            UserDefaults.standard.saveEpisode(episode: episode)
+            APIService.shared.downloadEpisode(episode: episode)
+        }
+        
+        return [downloadAction]
+    }
 }

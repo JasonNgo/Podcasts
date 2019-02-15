@@ -139,12 +139,12 @@ class MainTabBarController: UITabBarController {
             return
         }
         
-        let favouritesCollectionView = FavouritesCollectionViewController(collectionViewLayout: collectionViewLayout)
+//        let favouritesCollectionView = FavouritesCollectionViewController(collectionViewLayout: collectionViewLayout)
         
         viewControllers = [
-            searchCoordinatorNavController,
-            createNavigationController(for: favouritesCollectionView, title: "Favourites", image: #imageLiteral(resourceName: "favourite")),
-            createNavigationController(for: DownloadsTableViewController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
+            searchCoordinatorNavController
+//            createNavigationController(for: favouritesCollectionView, title: "Favourites", image: #imageLiteral(resourceName: "favourite")),
+//            createNavigationController(for: DownloadsTableViewController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
         ]
     }
     
