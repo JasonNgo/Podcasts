@@ -40,7 +40,6 @@ class SearchCoordinator: Coordinator {
         searchController.title = "Search"
         searchController.tabBarItem.title = "Search"
         searchController.tabBarItem.image = #imageLiteral(resourceName: "search").withRenderingMode(.alwaysOriginal)
-        setDeallocallable(with: searchController)
         navigationController.pushViewController(searchController, animated: false)
         self.searchController = searchController
     }

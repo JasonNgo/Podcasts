@@ -36,7 +36,6 @@ class FavouritesCoordinator: Coordinator {
         favouritesController.title = "Favourites"
         favouritesController.tabBarItem.title = "Favourites"
         favouritesController.tabBarItem.image = #imageLiteral(resourceName: "favourite").withRenderingMode(.alwaysOriginal)
-        setDeallocallable(with: favouritesController)
         navigationController.pushViewController(favouritesController, animated: false)
         self.favouritesController = favouritesController
     }

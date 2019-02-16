@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PodcastLBTA/API/APIService.swift"
-            timestampString = "571866340.2102081"
+            filePath = "PodcastLBTA/Screens/Episodes/EpisodesTableViewController.swift"
+            timestampString = "571976149.477282"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "fetchPodcastsWith(searchText:completionHandler:)"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "setupEpisodesNavigationBarButtons()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

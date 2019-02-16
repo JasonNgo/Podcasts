@@ -50,4 +50,14 @@ class EpisodeCell: UITableViewCell {
         guard let url = viewModel.thumbnailUrl else { return }
         thumbnailImageView.sd_setImage(with: url, completed: nil)
     }
+    
+    func setDownloadLabel(downloadProgress: Double) {
+        guard downloadProgress != 100  else {
+            downloadProgressLabel.isHidden = true
+            return
+        }
+        
+        downloadProgressLabel.isHidden = false
+        downloadProgressLabel.text = "\(Int(downloadProgress * 100))%"
+    }
 }

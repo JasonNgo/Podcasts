@@ -44,7 +44,7 @@ protocol SearchTableViewDelegate: AnyObject {
 
 // TODO: Use state var to update background view of tableview
 
-class SearchTableViewController: UITableViewController, Deinitcallable {
+class SearchTableViewController: UITableViewController {
     // MARK: - Dependencies
     private let dataSource: SearchTableViewDataSource
 
@@ -78,11 +78,6 @@ class SearchTableViewController: UITableViewController, Deinitcallable {
     }
     
     // MARK: - Life Cycle
-    var onDeinit: (() -> Void)?
-    
-    deinit {
-        onDeinit?()
-    }
     
     init(dataSource: SearchTableViewDataSource) {
         self.dataSource = dataSource

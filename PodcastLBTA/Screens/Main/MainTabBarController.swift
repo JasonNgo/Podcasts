@@ -35,24 +35,30 @@ class MainTabBarController: UITabBarController {
     // MARK: - Views
     private let playerDetailView = PlayerDetailView.initFromNib()
     
-    fileprivate var maximizedTopAnchorConstraint: NSLayoutConstraint!
-    fileprivate var minimizedTopAnchorConstraint: NSLayoutConstraint!
-    fileprivate var bottomAnchorConstraint: NSLayoutConstraint!
+    private var maximizedTopAnchorConstraint: NSLayoutConstraint!
+    private var minimizedTopAnchorConstraint: NSLayoutConstraint!
+    private var bottomAnchorConstraint: NSLayoutConstraint!
     
+    // MARK: - Tab Bar Coordinators
+    private let searchCoordinator: SearchCoordinator
+    private let favouritesCoordinator: FavouritesCoordinator
+    private let downloadsCoordinator: DownloadsCoordinator
+    
+    // MARK: - Data Sources
     private let searchDataSource: SearchTableViewDataSource
-    private var searchCoordinator: SearchCoordinator?
-    
     private let favouritesDataSource: FavouritesCollectionViewDataSource
-    private var favouritesCoordinator: FavouritesCoordinator?
+    private let downloadsDataSource: DownloadsTableViewDataSource
     
     // MARK: - Initializer
     
     init() {
         self.searchDataSource = SearchTableViewDataSource()
-        self.searchCoordinator = SearchCoordinator(navigationController: UINavigationController(), dataSource: searchDataSource)
-        
         self.favouritesDataSource = FavouritesCollectionViewDataSource()
+        self.downloadsDataSource = DownloadsTableViewDataSource()
+        
+        self.searchCoordinator = SearchCoordinator(navigationController: UINavigationController(), dataSource: searchDataSource)
         self.favouritesCoordinator = FavouritesCoordinator(navigationController: UINavigationController(), dataSource: favouritesDataSource)
+        self.downloadsCoordinator = DownloadsCoordinator(navigationController: UINavigationController(), dataSource: downloadsDataSource)
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -66,19 +72,51 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchCoordinator?.start()
-        searchCoordinator?.stop = { [weak self] in
-            self?.searchCoordinator = nil
-        }
-        
-        favouritesCoordinator?.start()
-        favouritesCoordinator?.stop = { [weak self] in
-            self?.favouritesCoordinator = nil
-        }
-        
+        setupCoordinators()
         setupMainTabBarControllerStyle()
         setupMainTabBarControllers()
         setupPlayerDetailView()
+    }
+    
+    // MARK: - Setup
+    
+    private func setupCoordinators() {
+        searchCoordinator.start()
+        favouritesCoordinator.start()
+        downloadsCoordinator.start()
+    }
+    
+    private func setupMainTabBarControllerStyle() {
+        view.backgroundColor = .white
+        tabBar.tintColor = .purple
+    }
+    
+    private func setupMainTabBarControllers() {
+        viewControllers = [
+            searchCoordinator.navigationController,
+            favouritesCoordinator.navigationController,
+            downloadsCoordinator.navigationController
+        ]
+    }
+    
+    fileprivate func setupPlayerDetailView() {
+        print("setting up PlayerDetailView")
+        
+        playerDetailView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(playerDetailView, belowSubview: tabBar)
+        
+        // set constraint values
+        bottomAnchorConstraint = playerDetailView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: view.frame.height)
+        maximizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
+        minimizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -64)
+        
+        // activate constraints
+        NSLayoutConstraint.activate([
+            playerDetailView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            playerDetailView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomAnchorConstraint,
+            maximizedTopAnchorConstraint
+            ])
     }
     
     // MARK: - Floating Player
@@ -135,58 +173,4 @@ class MainTabBarController: UITabBarController {
                 minimizePlayerDetailClosure()
         })
     }
-    
-    // MARK: - Setup
-    
-    fileprivate func setupMainTabBarControllerStyle() {
-        view.backgroundColor = .white
-        tabBar.tintColor = .purple
-        UINavigationBar.appearance().prefersLargeTitles = true
-    }
-    
-    fileprivate func setupMainTabBarControllers() {
-        guard
-            let searchNavController = searchCoordinator?.navigationController,
-            let favouritesNavController = favouritesCoordinator?.navigationController
-        else {
-            return
-        }
-        
-        viewControllers = [
-            searchNavController,
-            favouritesNavController
-//            createNavigationController(for: DownloadsTableViewController(), title: "Downloads", image: #imageLiteral(resourceName: "downloads"))
-        ]
-    }
-    
-    fileprivate func setupPlayerDetailView() {
-        print("setting up PlayerDetailView")
-        
-        playerDetailView.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(playerDetailView, belowSubview: tabBar)
-        
-        // set constraint values
-        bottomAnchorConstraint = playerDetailView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: view.frame.height)
-        maximizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
-        minimizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -64)
-        
-        // activate constraints
-        NSLayoutConstraint.activate([
-            playerDetailView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            playerDetailView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomAnchorConstraint,
-            maximizedTopAnchorConstraint
-            ])
-    }
-    
-    // MARK: - Helpers
-    
-    fileprivate func createNavigationController(for rootViewController: UIViewController, title: String, image: UIImage) -> UIViewController {
-        let navController = UINavigationController(rootViewController: rootViewController)
-        rootViewController.navigationItem.title = title
-        navController.tabBarItem.title = title
-        navController.tabBarItem.image = image.withRenderingMode(.alwaysOriginal)
-        return navController
-    }
-    
 }

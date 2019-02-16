@@ -34,7 +34,7 @@ protocol FavouritesCollectionViewDelegate: AnyObject {
     func favouritesCollectionViewDidSelect(podcast: Podcast)
 }
 
-class FavouritesCollectionViewController: UICollectionViewController, Deinitcallable {
+class FavouritesCollectionViewController: UICollectionViewController {
 
     // MARK: - Configurations
     private let insetForSection = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
@@ -48,13 +48,7 @@ class FavouritesCollectionViewController: UICollectionViewController, Deinitcall
     
     weak var delegate: FavouritesCollectionViewDelegate?
     
-    // MARK: -  Init/Deinit
-    
-    var onDeinit: (() -> Void)?
-    
-    deinit {
-        onDeinit?()
-    }
+    // MARK: -  Init
     
     init(dataSource: FavouritesCollectionViewDataSource) {
         let layout = UICollectionViewFlowLayout()
@@ -119,7 +113,9 @@ class FavouritesCollectionViewController: UICollectionViewController, Deinitcall
                 return
             }
             
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     

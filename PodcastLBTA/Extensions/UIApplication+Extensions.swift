@@ -28,7 +28,6 @@
 //  Copyright © 2018 Jason Ngo. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 extension UIApplication {

@@ -9,7 +9,6 @@
 import UIKit
 
 class EpisodesTableViewDataSource: NSObject {
-    
     private(set) var episodes: [Episode] = []
     private(set) var reuseId = "EpisodeCell"
     private(set) var podcast: Podcast
