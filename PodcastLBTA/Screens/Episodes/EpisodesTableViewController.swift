@@ -94,7 +94,7 @@ class EpisodesTableViewController: UITableViewController, Deinitcallable {
         UserDefaults.standard.set(savedPodcastsArchiveData, forKey: UserDefaults.favouritePodcastsKey)
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "heart").withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
-        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
+//        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = "new"
     }
     
     // MARK: - Helpers
@@ -127,7 +127,12 @@ extension EpisodesTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let episode = dataSource.item(at: indexPath.row) else { return }
-        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: dataSource.episodes)
+        let userInfo: [String: Any] = [
+            "episode": episode,
+            "playlistEpisodes": dataSource.episodes
+        ]
+        
+        NotificationCenter.default.post(name: .maximizePlayer, object: nil, userInfo: userInfo)
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -144,6 +149,7 @@ extension EpisodesTableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let downloadAction = UITableViewRowAction(style: .normal, title: "Download") { (_, _) in
             guard let episode = self.dataSource.item(at: indexPath.row) else { return }
+            
             UserDefaults.standard.saveEpisode(episode: episode)
             APIService.shared.downloadEpisode(episode: episode)
         }

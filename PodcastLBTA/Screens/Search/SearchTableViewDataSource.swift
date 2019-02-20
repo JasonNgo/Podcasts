@@ -41,7 +41,7 @@ extension SearchTableViewDataSource: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseId, for: indexPath) as? PodcastCell else {
-            fatalError("Error attempting to cast PodcastCell")
+            fatalError("Unable attempting to cast PodcastCell")
         }
         
         let podcast = podcasts[indexPath.row]

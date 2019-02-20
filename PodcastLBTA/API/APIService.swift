@@ -32,13 +32,8 @@ import Foundation
 import Alamofire
 import FeedKit
 
-extension NSNotification.Name {
-    static let downloadProgress =  NSNotification.Name("downloadProgress")
-    static let downloadComplete =  NSNotification.Name("downloadComplete")
-}
-
 class APIService {
-    
+    private init() {}
     static let shared = APIService()
     
     struct PodcastsSearchResult: Decodable {
@@ -99,29 +94,28 @@ class APIService {
             ]
             
             NotificationCenter.default.post(name: .downloadProgress, object: nil, userInfo: userInfo)
+        }.response { (response) in
+            guard let fileUrl = response.destinationURL?.absoluteString else { return }
             
-            }.response { (response) in
-                guard let fileUrl = response.destinationURL?.absoluteString else { return }
-                
-                var downloadedEpisodes = UserDefaults.standard.savedEpisodes()
-                guard let index = downloadedEpisodes.index(of: episode) else { return }
-                downloadedEpisodes[index].fileUrl = fileUrl
-                
-                let userInfo: [String : Any] = [
-                    "title": episode.title,
-                    "author": episode.author,
-                    "fileUrl": fileUrl
-                ]
-                
-                NotificationCenter.default.post(name: .downloadComplete, object: nil, userInfo: userInfo)
-                
-                do {
-                    let data = try JSONEncoder().encode(downloadedEpisodes)
-                    UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
-                } catch let error {
-                    print("There was an error attempting to save list of episodes to UserDefaults", error)
-                }
+            var downloadedEpisodes = UserDefaults.standard.savedEpisodes()
+            guard let index = downloadedEpisodes.index(of: episode) else { return }
+            downloadedEpisodes[index].fileUrl = fileUrl
+            
+            let userInfo: [String : Any] = [
+                "title": episode.title,
+                "author": episode.author,
+                "fileUrl": fileUrl
+            ]
+            
+            NotificationCenter.default.post(name: .downloadComplete, object: nil, userInfo: userInfo)
+            
+            do {
+                let data = try JSONEncoder().encode(downloadedEpisodes)
+                UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
+            } catch let error {
+                print("There was an error attempting to save list of episodes to UserDefaults", error)
             }
+        }
     }
     
 }

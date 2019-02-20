@@ -40,7 +40,9 @@ struct Episode: Codable {
     var imageUrl: String?
     var fileUrl: String?
     let streamUrl: String
-    
+}
+
+extension Episode {
     init(feedItem: RSSFeedItem) {
         self.title = feedItem.title ?? ""
         self.author = feedItem.iTunes?.iTunesAuthor ?? ""
@@ -56,3 +58,4 @@ extension Episode: Equatable {
         return lhs.title == rhs.title && lhs.author == rhs.author
     }
 }
+

@@ -62,7 +62,6 @@ class FavouritesCollectionViewController: UICollectionViewController {
         super.viewWillAppear(animated)
         
         fetchFavourites()
-        UIApplication.mainTabBarController()?.viewControllers?[1].tabBarItem.badgeValue = nil
     }
     
     override func viewDidLoad() {

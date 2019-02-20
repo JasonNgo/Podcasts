@@ -75,6 +75,7 @@ class MainTabBarController: UITabBarController {
         setupCoordinators()
         setupMainTabBarControllerStyle()
         setupMainTabBarControllers()
+        setupPlayerObservers()
         setupPlayerDetailView()
     }
     
@@ -99,29 +100,36 @@ class MainTabBarController: UITabBarController {
         ]
     }
     
-    fileprivate func setupPlayerDetailView() {
-        print("setting up PlayerDetailView")
-        
+    private func setupPlayerObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(maximizePlayer), name: .maximizePlayer, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(minimizePlayerDetails), name: .minimizePlayer, object: nil)
+    }
+    
+    private func setupPlayerDetailView() {
         playerDetailView.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(playerDetailView, belowSubview: tabBar)
         
-        // set constraint values
         bottomAnchorConstraint = playerDetailView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: view.frame.height)
         maximizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
         minimizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -64)
         
-        // activate constraints
         NSLayoutConstraint.activate([
             playerDetailView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerDetailView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomAnchorConstraint,
             maximizedTopAnchorConstraint
-            ])
+        ])
     }
     
     // MARK: - Floating Player
     
-    func maximizePlayerDetails(episode: Episode?, playlistEpisodes: [Episode] = []) {
+    @objc private func maximizePlayer(notification: Notification) {
+        let episode: Episode? = notification.userInfo?["episode"] as? Episode
+        let playlistEpisodes: [Episode] = notification.userInfo?["playlistEpisodes"] as? [Episode] ?? []
+        maximizePlayerDetails(episode: episode, playlistEpisodes: playlistEpisodes)
+    }
+    
+    private func maximizePlayerDetails(episode: Episode?, playlistEpisodes: [Episode] = []) {
         minimizedTopAnchorConstraint.isActive = false
         maximizedTopAnchorConstraint.isActive = true
         maximizedTopAnchorConstraint.constant = 0
@@ -133,13 +141,6 @@ class MainTabBarController: UITabBarController {
         
         playerDetailView.playlistEpisodes = playlistEpisodes
         
-        let maximizePlayerDetailsClosure = {
-            self.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
-            self.playerDetailView.maximizedStackView.alpha = 1
-            self.playerDetailView.minimizedPlayerView.alpha = 0
-            self.view.layoutIfNeeded()
-        }
-        
         UIView.animate(
             withDuration: 0.5,
             delay: 0,
@@ -147,22 +148,17 @@ class MainTabBarController: UITabBarController {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                maximizePlayerDetailsClosure()
+                self.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
+                self.playerDetailView.maximizedStackView.alpha = 1
+                self.playerDetailView.minimizedPlayerView.alpha = 0
         })
     }
     
-    func minimizePlayerDetails() {
+    @objc private func minimizePlayerDetails() {
         maximizedTopAnchorConstraint.isActive = false
         bottomAnchorConstraint.constant = view.frame.height
         minimizedTopAnchorConstraint.isActive = true
         
-        let minimizePlayerDetailClosure = {
-            self.tabBar.transform = .identity
-            self.playerDetailView.maximizedStackView.alpha = 0
-            self.playerDetailView.minimizedPlayerView.alpha = 1
-            self.view.layoutIfNeeded()
-        }
-        
         UIView.animate(
             withDuration: 0.5,
             delay: 0,
@@ -170,7 +166,9 @@ class MainTabBarController: UITabBarController {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                minimizePlayerDetailClosure()
+                self.tabBar.transform = .identity
+                self.playerDetailView.maximizedStackView.alpha = 0
+                self.playerDetailView.minimizedPlayerView.alpha = 1
         })
     }
 }

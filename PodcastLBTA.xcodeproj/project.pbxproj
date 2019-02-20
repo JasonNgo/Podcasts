@@ -13,7 +13,6 @@
 		7D2ECC41211FC1D100E8C580 /* PodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ECC40211FC1D100E8C580 /* PodcastCell.swift */; };
 		7D2ECC43211FD28500E8C580 /* EpisodesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ECC42211FD28500E8C580 /* EpisodesTableViewController.swift */; };
 		7D2FB2722120BA9800CDFDA4 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FB2712120BA9800CDFDA4 /* Episode.swift */; };
-		7D390F3221249B9900E5FE4C /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F3121249B9900E5FE4C /* UIApplication+Extensions.swift */; };
 		7D390F342125BC3600E5FE4C /* FavouritesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F332125BC3600E5FE4C /* FavouritesCollectionViewController.swift */; };
 		7D390F362125C04500E5FE4C /* FavouritePodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F352125C04500E5FE4C /* FavouritePodcastCell.swift */; };
 		7D390F382126194200E5FE4C /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D390F372126194200E5FE4C /* UserDefaults+Extensions.swift */; };
@@ -27,6 +26,7 @@
 		7D4FFA1121234B4700BB9620 /* CMTime+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4FFA1021234B4700BB9620 /* CMTime+Extensions.swift */; };
 		7D54166B2123BB7800D4C852 /* PlayerDetailView+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D54166A2123BB7800D4C852 /* PlayerDetailView+Gestures.swift */; };
 		7D819CA72211E3AE00694974 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D819CA62211E3AE00694974 /* Coordinator.swift */; };
+		7D92FA7F2218DEA0008C6555 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D92FA7E2218DEA0008C6555 /* Notification+Extensions.swift */; };
 		7DBDE65D211F69BD0004DD72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */; };
 		7DBDE664211F69BE0004DD72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DBDE663211F69BE0004DD72 /* Assets.xcassets */; };
 		7DBDE667211F69BE0004DD72 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DBDE665211F69BE0004DD72 /* LaunchScreen.storyboard */; };
@@ -55,7 +55,6 @@
 		7D2ECC40211FC1D100E8C580 /* PodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastCell.swift; sourceTree = "<group>"; };
 		7D2ECC42211FD28500E8C580 /* EpisodesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesTableViewController.swift; sourceTree = "<group>"; };
 		7D2FB2712120BA9800CDFDA4 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
-		7D390F3121249B9900E5FE4C /* UIApplication+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extensions.swift"; sourceTree = "<group>"; };
 		7D390F332125BC3600E5FE4C /* FavouritesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesCollectionViewController.swift; sourceTree = "<group>"; };
 		7D390F352125C04500E5FE4C /* FavouritePodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritePodcastCell.swift; sourceTree = "<group>"; };
 		7D390F372126194200E5FE4C /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
@@ -69,6 +68,7 @@
 		7D4FFA1021234B4700BB9620 /* CMTime+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMTime+Extensions.swift"; sourceTree = "<group>"; };
 		7D54166A2123BB7800D4C852 /* PlayerDetailView+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerDetailView+Gestures.swift"; sourceTree = "<group>"; };
 		7D819CA62211E3AE00694974 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		7D92FA7E2218DEA0008C6555 /* Notification+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
 		7DBDE659211F69BD0004DD72 /* PodcastLBTA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PodcastLBTA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DBDE65C211F69BD0004DD72 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DBDE663211F69BE0004DD72 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -126,12 +126,12 @@
 		7D4FFA0721220F2D00BB9620 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				7D4FFA0821220F3700BB9620 /* String+Extensions.swift */,
-				7D4FFA0A212211E700BB9620 /* RSSFeed+Extensions.swift */,
 				7D4FFA1021234B4700BB9620 /* CMTime+Extensions.swift */,
-				7D390F3121249B9900E5FE4C /* UIApplication+Extensions.swift */,
-				7D390F372126194200E5FE4C /* UserDefaults+Extensions.swift */,
+				7D92FA7E2218DEA0008C6555 /* Notification+Extensions.swift */,
+				7D4FFA0A212211E700BB9620 /* RSSFeed+Extensions.swift */,
+				7D4FFA0821220F3700BB9620 /* String+Extensions.swift */,
 				7DD6B981221720920036A91B /* UIView+Extensions.swift */,
+				7D390F372126194200E5FE4C /* UserDefaults+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -417,10 +417,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D390F3221249B9900E5FE4C /* UIApplication+Extensions.swift in Sources */,
 				7DD6B97B2216044B0036A91B /* EpisodeCellViewModel.swift in Sources */,
 				7D4FFA0B212211E700BB9620 /* RSSFeed+Extensions.swift in Sources */,
 				7DD6B9722215D4880036A91B /* SearchCoordinator.swift in Sources */,
+				7D92FA7F2218DEA0008C6555 /* Notification+Extensions.swift in Sources */,
 				7DD6B98B221784D50036A91B /* DownloadsCoordinator.swift in Sources */,
 				7DBDE674211F81D70004DD72 /* SearchTableViewController.swift in Sources */,
 				7D4FFA0F2122192F00BB9620 /* PlayerDetailView.swift in Sources */,

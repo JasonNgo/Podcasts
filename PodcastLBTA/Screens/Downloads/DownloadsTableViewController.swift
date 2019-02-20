@@ -169,7 +169,12 @@ extension DownloadsTableViewController {
             return
         }
         
-        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: dataSource.episodes)
+        let userInfo: [String: Any] = [
+            "episode": episode,
+            "playlistEpisodes": dataSource.episodes
+        ]
+        
+        NotificationCenter.default.post(name: .maximizePlayer, object: nil, userInfo: userInfo)
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
