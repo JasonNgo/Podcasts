@@ -42,9 +42,8 @@ extension UserDefaults {
     
     func deletePodcast(podcast: Podcast) {
         let podcasts = savedPodcasts()
-        let filteredPodcasts = podcasts.filter {
-            return $0.trackName != podcast.trackName && $0.artistName != podcast.artistName
-        }
+        let filteredPodcasts = podcasts.filter { $0.trackName != podcast.trackName && $0.artistName != podcast.artistName }
+        guard filteredPodcasts.count != podcasts.count else { return }
         
         let data = NSKeyedArchiver.archivedData(withRootObject: filteredPodcasts)
         UserDefaults.standard.set(data, forKey: UserDefaults.favouritePodcastsKey)
@@ -53,9 +52,8 @@ extension UserDefaults {
     func savedEpisodes() -> [Episode] {
         guard let savedEpisodesData = UserDefaults.standard.data(forKey: UserDefaults.savedEpisodesKey) else { return [] }
         
-        let decoder = JSONDecoder()
         do {
-            let episodes = try decoder.decode([Episode].self, from: savedEpisodesData)
+            let episodes = try JSONDecoder().decode([Episode].self, from: savedEpisodesData)
             return episodes
         } catch let error {
             print("There was an error attempting to decode saved episodes object:", error)
@@ -64,17 +62,13 @@ extension UserDefaults {
     }
     
     func saveEpisode(episode: Episode) {
-        let encoder = JSONEncoder()
         var savedEpisodes = self.savedEpisodes()
-        let episodeHasBeenDownloaded = savedEpisodes.index {
-            $0.title == episode.title && $0.author == episode.author
-        }
-        
+        let episodeHasBeenDownloaded = savedEpisodes.index { $0.title == episode.title && $0.author == episode.author }
         guard episodeHasBeenDownloaded == nil else { return }
         
         do {
             savedEpisodes.append(episode)
-            let data = try encoder.encode(savedEpisodes)
+            let data = try JSONEncoder().encode(savedEpisodes)
             UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
         } catch let error {
             print("There was an error attempting to convert Episode to JSON format", error)
@@ -82,18 +76,15 @@ extension UserDefaults {
     }
     
     func removeEpisode(episode: Episode) {
-        let encoder = JSONEncoder()
         let savedEpisodes = self.savedEpisodes()
-        let filteredEpisodes = savedEpisodes.filter {
-            return $0.title != episode.title && $0.pubDate != episode.pubDate
-        }
+        let filteredEpisodes = savedEpisodes.filter { $0.title != episode.title && $0.pubDate != episode.pubDate }
+        guard filteredEpisodes.count != savedEpisodes.count else { return }
         
         do {
-            let data = try encoder.encode(filteredEpisodes)
+            let data = try JSONEncoder().encode(filteredEpisodes)
             UserDefaults.standard.set(data, forKey: UserDefaults.savedEpisodesKey)
         } catch let error {
             print("There was an error attempting to encode saved episodes:", error)
         }
     }
-    
 }

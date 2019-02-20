@@ -32,21 +32,23 @@ import Foundation
 import Alamofire
 import FeedKit
 
+fileprivate struct PodcastsSearchResult: Decodable {
+    var resultCount: Int?
+    var results: [Podcast]?
+}
+
 class APIService {
     private init() {}
     static let shared = APIService()
     
-    struct PodcastsSearchResult: Decodable {
-        var resultCount: Int?
-        var results: [Podcast]?
-    }
-    
-    let baseiTunesSearchUrl = "https://itunes.apple.com/search"
+    private let baseiTunesSearchUrl = "https://itunes.apple.com/search"
     
     func fetchPodcastsWith(searchText: String, completionHandler: @escaping ([Podcast]) -> Void) {
-        print("searching for podcasts...")
+        let parameters = [
+            "term": searchText,
+            "media": "podcast"
+        ]
         
-        let parameters = ["term": searchText, "media": "podcast"]
         Alamofire.request(baseiTunesSearchUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
             if let err = dataResponse.error {
                 print("There was an error fetching list of podcasts", err)
@@ -83,8 +85,6 @@ class APIService {
     }
     
     func downloadEpisode(episode: Episode) {
-        print("Attempting to download episode with streamUrl: \(episode.streamUrl)")
-        
         let downloadRequest = DownloadRequest.suggestedDownloadDestination()
         Alamofire.download(episode.streamUrl, to: downloadRequest).downloadProgress { (progress) in
             let userInfo: [String : Any] = [
@@ -117,5 +117,4 @@ class APIService {
             }
         }
     }
-    
 }
