@@ -31,7 +31,6 @@
 import UIKit
 
 extension PlayerDetailView {
-    
     @objc func handleExpand() {
         NotificationCenter.default.post(name: .maximizePlayer, object: nil, userInfo: nil)
     }
@@ -47,7 +46,7 @@ extension PlayerDetailView {
         }
     }
     
-    func handlePanChanged(gesture: UIPanGestureRecognizer) {
+    private func handlePanChanged(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: superview)
         transform = CGAffineTransform(translationX: 0, y: translation.y)
         
@@ -55,21 +54,7 @@ extension PlayerDetailView {
         maximizedStackView.alpha = -translation.y / 200
     }
     
-    func handlePanEnded(gesture: UIPanGestureRecognizer) {
-        let handlePanEndedClosure = {
-            self.transform = .identity
-            
-            let translation = gesture.translation(in: self.superview)
-            let velocity = gesture.velocity(in: self.superview)
-            
-            if translation.y < -200 || velocity.y < -500 {
-                NotificationCenter.default.post(name: .maximizePlayer, object: nil, userInfo: nil)
-            } else {
-                self.minimizedPlayerView.alpha = 1
-                self.maximizedStackView.alpha = 0
-            }
-        }
-        
+    private func handlePanEnded(gesture: UIPanGestureRecognizer) {
         UIView.animate(
             withDuration: 0.5,
             delay: 0,
@@ -77,7 +62,17 @@ extension PlayerDetailView {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                handlePanEndedClosure()
+                self.transform = .identity
+                
+                let translation = gesture.translation(in: self.superview)
+                let velocity = gesture.velocity(in: self.superview)
+                
+                if translation.y < -200 || velocity.y < -500 {
+                    NotificationCenter.default.post(name: .maximizePlayer, object: nil, userInfo: nil)
+                } else {
+                    self.minimizedPlayerView.alpha = 1
+                    self.maximizedStackView.alpha = 0
+                }
         })
     }
     
@@ -92,21 +87,12 @@ extension PlayerDetailView {
         }
     }
     
-    func handleMaximizedPanGestureChanged(gesture: UIPanGestureRecognizer) {
+    private func handleMaximizedPanGestureChanged(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: superview)
         transform = CGAffineTransform(translationX: 0, y: translation.y)
     }
     
-    func handleMaximizedPanGestureEnded(gesture: UIPanGestureRecognizer) {
-        let handleMaximizedPanClosure = {
-            self.transform = .identity
-            let translation = gesture.translation(in: self.superview)
-            let velocity = gesture.velocity(in: self.superview)
-            if translation.y > 50 || velocity.y > 500 {
-                NotificationCenter.default.post(name: .minimizePlayer, object: nil, userInfo: nil)
-            }
-        }
-        
+    private func handleMaximizedPanGestureEnded(gesture: UIPanGestureRecognizer) {
         UIView.animate(
             withDuration: 0.5,
             delay: 0,
@@ -114,8 +100,12 @@ extension PlayerDetailView {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                handleMaximizedPanClosure()
+                self.transform = .identity
+                let translation = gesture.translation(in: self.superview)
+                let velocity = gesture.velocity(in: self.superview)
+                if translation.y > 50 || velocity.y > 500 {
+                    NotificationCenter.default.post(name: .minimizePlayer, object: nil, userInfo: nil)
+                }
         })
     }
-    
 }

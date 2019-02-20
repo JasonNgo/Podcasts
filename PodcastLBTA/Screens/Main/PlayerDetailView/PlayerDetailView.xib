@@ -86,7 +86,7 @@
                                 <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                             </state>
                         </button>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QWt-Kb-iw4">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QWt-Kb-iw4">
                             <rect key="frame" x="0.0" y="48" width="366" height="366"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="QWt-Kb-iw4" secondAttribute="height" id="mKM-mh-QM8"/>
