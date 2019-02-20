@@ -151,6 +151,7 @@ class MainTabBarController: UITabBarController {
                 self.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
                 self.playerDetailView.maximizedStackView.alpha = 1
                 self.playerDetailView.minimizedPlayerView.alpha = 0
+                self.view.layoutIfNeeded()
         })
     }
     
@@ -169,6 +170,7 @@ class MainTabBarController: UITabBarController {
                 self.tabBar.transform = .identity
                 self.playerDetailView.maximizedStackView.alpha = 0
                 self.playerDetailView.minimizedPlayerView.alpha = 1
+                self.view.layoutIfNeeded()
         })
     }
 }

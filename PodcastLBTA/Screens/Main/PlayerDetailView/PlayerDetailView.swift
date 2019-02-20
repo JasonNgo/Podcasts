@@ -348,7 +348,7 @@ class PlayerDetailView: UIView {
   // MARK: Selector Functions
   
   @objc func handleDismiss() {
-    UIApplication.mainTabBarController()?.minimizePlayerDetails()
+    NotificationCenter.default.post(name: .minimizePlayer, object: nil, userInfo: nil)
   }
   
   @objc func handleNextTrackPressed() {

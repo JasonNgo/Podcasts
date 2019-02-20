@@ -33,7 +33,7 @@ import UIKit
 extension PlayerDetailView {
   
   @objc func handleExpand() {
-    UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
+    NotificationCenter.default.post(name: .maximizePlayer, object: nil, userInfo: nil)
   }
   
   @objc func handlePan(gesture: UIPanGestureRecognizer) {
@@ -63,7 +63,7 @@ extension PlayerDetailView {
       let velocity = gesture.velocity(in: self.superview)
       
       if translation.y < -200 || velocity.y < -500 {
-        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
+        NotificationCenter.default.post(name: .maximizePlayer, object: nil, userInfo: nil)
       } else {
         self.minimizedPlayerView.alpha = 1
         self.maximizedStackView.alpha = 0
@@ -103,7 +103,7 @@ extension PlayerDetailView {
       let translation = gesture.translation(in: self.superview)
       let velocity = gesture.velocity(in: self.superview)
       if translation.y > 50 || velocity.y > 500 {
-        UIApplication.mainTabBarController()?.minimizePlayerDetails()
+        NotificationCenter.default.post(name: .minimizePlayer, object: nil, userInfo: nil)
       }
     }
     
