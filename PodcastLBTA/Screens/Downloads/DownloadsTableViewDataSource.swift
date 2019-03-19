@@ -61,7 +61,7 @@ extension DownloadsTableViewDataSource: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Hello world", for: indexPath) as? EpisodeCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseId, for: indexPath) as? EpisodeCell else {
             fatalError("Unable to dequeue cell")
         }
         
